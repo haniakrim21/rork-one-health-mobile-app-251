@@ -1,0 +1,491 @@
+import { WellnessPath, MeditationSession, TherapySession, MoodEntry, DailyCheckIn, CognitiveBehavioralNudge, EnergyScore, ResilienceScore, Habit, NutritionGuidance, AIWellnessCopilot, WellnessTrigger, CulturalWellnessModel } from '@/types/wellness';
+
+export const mockWellnessPaths: WellnessPath[] = [
+  {
+    id: '1',
+    name: 'Stress Management Mastery',
+    description: 'Learn evidence-based techniques to manage stress and build resilience',
+    category: 'stress',
+    duration: 21, // days
+    modules: [
+      {
+        id: 'm1',
+        name: 'Understanding Stress',
+        type: 'education',
+        duration: 15, // minutes
+        content: 'Learn about the science of stress and its impact on your body',
+        completed: true,
+        videoUrl: 'https://example.com/stress-video',
+      },
+      {
+        id: 'm2',
+        name: 'Breathing Techniques',
+        type: 'meditation',
+        duration: 10,
+        content: 'Master deep breathing exercises for instant stress relief',
+        completed: false,
+      },
+    ],
+    progress: 30,
+    isActive: true,
+    startedAt: '2025-06-01T00:00:00Z',
+  },
+  {
+    id: '2',
+    name: 'Mindful Living',
+    description: 'Integrate mindfulness into your daily routine for better mental health',
+    category: 'anxiety',
+    duration: 14,
+    modules: [
+      {
+        id: 'm3',
+        name: 'Introduction to Mindfulness',
+        type: 'education',
+        duration: 20,
+        content: 'Discover the fundamentals of mindful living',
+        completed: false,
+      },
+    ],
+    progress: 0,
+    isActive: false,
+  },
+];
+
+export const mockMeditationSessions: MeditationSession[] = [
+  {
+    id: '1',
+    name: 'Morning Mindfulness',
+    description: 'Start your day with clarity and intention',
+    duration: 10,
+    category: 'focus',
+    instructor: 'Sarah Chen',
+    audioUrl: 'https://example.com/morning-meditation.mp3',
+    imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    difficulty: 'beginner',
+    tags: ['beginner', 'morning', 'focus'],
+    rating: 4.8,
+    playCount: 1250,
+    isFavorite: false,
+    completed: false,
+  },
+  {
+    id: '2',
+    name: 'Deep Sleep Relaxation',
+    description: 'Unwind and prepare for restful sleep',
+    duration: 20,
+    category: 'sleep',
+    instructor: 'Michael Torres',
+    audioUrl: 'https://example.com/sleep-meditation.mp3',
+    imageUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    difficulty: 'intermediate',
+    tags: ['sleep', 'relaxation', 'evening'],
+    rating: 4.9,
+    playCount: 2100,
+    isFavorite: true,
+    completed: true,
+    completedAt: '2025-06-17T22:00:00Z',
+  },
+];
+
+export const mockTherapySessions: TherapySession[] = [
+  {
+    id: '1',
+    name: 'Anxiety Management Group',
+    description: 'Learn coping strategies with others facing similar challenges',
+    type: 'group',
+    category: 'cbt',
+    therapist: 'Dr. Emily Rodriguez',
+    duration: 60,
+    scheduledFor: '2025-06-20T14:00:00Z',
+    isLive: false,
+    maxParticipants: 12,
+    currentParticipants: 8,
+    price: 45,
+    status: 'upcoming',
+  },
+  {
+    id: '2',
+    name: 'Individual CBT Session',
+    description: 'One-on-one cognitive behavioral therapy session',
+    type: 'individual',
+    category: 'cbt',
+    therapist: 'Dr. James Wilson',
+    duration: 50,
+    scheduledFor: '2025-06-22T10:00:00Z',
+    isLive: false,
+    price: 120,
+    status: 'upcoming',
+  },
+];
+
+export const mockMoodEntries: MoodEntry[] = [
+  {
+    id: '1',
+    mood: 'good',
+    energy: 'good',
+    stress: 3,
+    anxiety: 2,
+    sleep: 7,
+    notes: 'Had a great workout this morning and feeling energized!',
+    factors: ['exercise', 'good_sleep'],
+    timestamp: '2025-06-18T09:00:00Z',
+    activities: ['workout', 'meditation'],
+  },
+  {
+    id: '2',
+    mood: 'okay',
+    energy: 'okay',
+    stress: 6,
+    anxiety: 5,
+    sleep: 6,
+    notes: 'Work presentation tomorrow, feeling a bit nervous',
+    factors: ['work_stress', 'presentation'],
+    timestamp: '2025-06-17T20:00:00Z',
+    activities: ['breathing_exercise'],
+  },
+];
+
+export const mockDailyCheckIns: DailyCheckIn[] = [
+  {
+    id: '1',
+    date: '2025-06-18',
+    completed: true,
+    mood: 8,
+    energy: 8,
+    stress: 3,
+    sleep: 7,
+    nutrition: 8,
+    exercise: 7,
+    hydration: 9,
+    gratitude: ['Morning coffee', 'Sunny weather', 'Good health'],
+    goals: ['Exercise for 30 minutes', 'Meditate for 10 minutes', 'Read for 20 minutes'],
+    challenges: ['Time management'],
+    wins: ['Completed morning workout', 'Had a productive meeting'],
+    notes: 'Great day overall!',
+  },
+  {
+    id: '2',
+    date: '2025-06-17',
+    completed: true,
+    mood: 6,
+    energy: 6,
+    stress: 5,
+    sleep: 6,
+    nutrition: 7,
+    exercise: 5,
+    hydration: 8,
+    gratitude: ['Family time', 'Delicious dinner'],
+    goals: ['Complete work project', 'Call mom', 'Take a walk'],
+    challenges: ['Work deadline pressure'],
+    wins: ['Finished important task'],
+    notes: 'Decent day with some stress.',
+  },
+];
+
+export const mockCognitiveBehavioralNudges: CognitiveBehavioralNudge[] = [
+  {
+    id: '1',
+    title: 'Reframe Negative Thoughts',
+    message: 'Notice that thought? Try asking: "Is this thought helpful or harmful to me right now?"',
+    type: 'thought-challenge',
+    category: 'anxiety',
+    triggerConditions: {
+      moodBelow: 5,
+      stressAbove: 6,
+    },
+    dismissed: false,
+    timestamp: '2025-06-18T14:30:00Z',
+  },
+  {
+    id: '2',
+    title: 'Practice Gratitude',
+    message: 'Take a moment to appreciate three things that went well today, no matter how small.',
+    type: 'gratitude-prompt',
+    category: 'self-esteem',
+    triggerConditions: {
+      timeOfDay: ['evening'],
+    },
+    dismissed: false,
+    timestamp: '2025-06-18T19:00:00Z',
+  },
+];
+
+export const mockEnergyScores: EnergyScore[] = [
+  {
+    id: '1',
+    date: '2025-06-18',
+    score: 85,
+    factors: {
+      sleep: 8,
+      nutrition: 7,
+      exercise: 9,
+      stress: 6,
+      mood: 8,
+      hydration: 8,
+    },
+    recommendations: [
+      'Try to reduce stress through meditation',
+      'Maintain your excellent exercise routine',
+    ],
+    trend: 'improving',
+  },
+  {
+    id: '2',
+    date: '2025-06-17',
+    score: 72,
+    factors: {
+      sleep: 6,
+      nutrition: 8,
+      exercise: 7,
+      stress: 5,
+      mood: 7,
+      hydration: 7,
+    },
+    recommendations: [
+      'Aim for 7-8 hours of sleep tonight',
+      'Consider a short walk to boost energy',
+    ],
+    trend: 'stable',
+  },
+];
+
+export const mockResilienceScores: ResilienceScore[] = [
+  {
+    id: '1',
+    date: '2025-06-18',
+    score: 78,
+    components: {
+      emotional: 8,
+      cognitive: 7,
+      physical: 8,
+      social: 7,
+      spiritual: 8,
+    },
+    strengths: [
+      'Strong emotional regulation skills',
+      'Good physical health habits',
+    ],
+    areasForGrowth: [
+      'Building stronger social connections',
+      'Developing cognitive flexibility',
+    ],
+    recommendations: [
+      'Consider reaching out to friends more often',
+      'Practice mindfulness to improve cognitive flexibility',
+    ],
+    trend: 'improving',
+  },
+];
+
+export const mockHabits: Habit[] = [
+  {
+    id: '1',
+    name: 'Morning Meditation',
+    description: '10 minutes of mindfulness meditation',
+    category: 'mindfulness',
+    frequency: 'daily',
+    streak: 12,
+    longestStreak: 25,
+    completedDates: ['2025-06-17', '2025-06-16', '2025-06-15'],
+    completed: true,
+    completedToday: true,
+    reminderEnabled: true,
+    reminderTime: '07:00',
+    difficulty: 'easy',
+    points: 120,
+    isActive: true,
+    createdAt: '2025-06-06T00:00:00Z',
+  },
+  {
+    id: '2',
+    name: 'Gratitude Journal',
+    description: 'Write down 3 things I am grateful for',
+    category: 'mindfulness',
+    frequency: 'daily',
+    streak: 8,
+    longestStreak: 15,
+    completedDates: ['2025-06-17', '2025-06-16'],
+    completed: false,
+    completedToday: false,
+    reminderEnabled: true,
+    reminderTime: '21:00',
+    difficulty: 'easy',
+    points: 80,
+    isActive: true,
+    createdAt: '2025-06-10T00:00:00Z',
+  },
+  {
+    id: '3',
+    name: 'Digital Detox',
+    description: 'No social media for 1 hour before bed',
+    category: 'mindfulness',
+    frequency: 'daily',
+    streak: 5,
+    longestStreak: 10,
+    completedDates: ['2025-06-17', '2025-06-16', '2025-06-15'],
+    completed: true,
+    completedToday: true,
+    reminderEnabled: true,
+    reminderTime: '20:00',
+    difficulty: 'medium',
+    points: 50,
+    isActive: true,
+    createdAt: '2025-06-13T00:00:00Z',
+  },
+];
+
+export const mockNutritionGuidance: NutritionGuidance[] = [
+  {
+    id: '1',
+    title: 'Brain-Boosting Foods',
+    description: 'Foods that support cognitive function and mental clarity',
+    category: 'nutrition-education',
+    content: 'Discover foods that enhance brain function and support mental wellness.',
+    imageUrl: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    tips: [
+      'Blueberries - rich in antioxidants',
+      'Fatty fish - omega-3 for brain health',
+      'Nuts and seeds - vitamin E and healthy fats',
+      'Dark leafy greens - folate and vitamins',
+    ],
+    isPersonalized: false,
+  },
+  {
+    id: '2',
+    title: 'Stress-Fighting Nutrients',
+    description: 'Nutritional support for managing stress and anxiety',
+    category: 'nutrition-education',
+    content: 'Learn about nutrients that help your body cope with stress.',
+    imageUrl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    tips: [
+      'Magnesium-rich foods - almonds, spinach',
+      'Complex carbohydrates - oats, quinoa',
+      'Herbal teas - chamomile, lavender',
+      'Dark chocolate - in moderation',
+    ],
+    isPersonalized: true,
+  },
+];
+
+export const mockAIWellnessCopilots: AIWellnessCopilot[] = [
+  {
+    id: '1',
+    name: 'Mindful Maya',
+    description: 'Your mindfulness and meditation guide',
+    specialty: 'anxiety',
+    personality: 'gentle',
+    avatar: 'https://images.unsplash.com/photo-1494790108755-2616c9c0e8e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    isActive: true,
+  },
+  {
+    id: '2',
+    name: 'Resilience Rex',
+    description: 'Building mental toughness and emotional resilience',
+    specialty: 'stress',
+    personality: 'motivational',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    isActive: false,
+  },
+];
+
+export const mockWellnessTriggers: WellnessTrigger[] = [
+  {
+    id: '1',
+    name: 'Stress Level Alert',
+    description: 'Get notified when stress levels are elevated',
+    type: 'stress',
+    conditions: {
+      stressAbove: 7,
+    },
+    actions: [
+      {
+        type: 'breathing',
+        content: 'Try a 5-minute breathing exercise to reduce stress',
+        duration: 5,
+      },
+    ],
+    enabled: true,
+    isActive: true,
+    triggeredCount: 3,
+    lastTriggered: '2025-06-17T15:30:00Z',
+  },
+  {
+    id: '2',
+    name: 'Mood Check Reminder',
+    description: 'Daily reminder to log your mood',
+    type: 'time',
+    conditions: {
+      timeOfDay: '20:00',
+    },
+    actions: [
+      {
+        type: 'journaling',
+        content: 'Take a moment to reflect on your day and log your mood',
+        duration: 3,
+      },
+    ],
+    enabled: true,
+    isActive: true,
+    triggeredCount: 15,
+    lastTriggered: '2025-06-17T20:00:00Z',
+  },
+];
+
+export const mockCulturalWellnessModels: CulturalWellnessModel[] = [
+  {
+    id: '1',
+    name: 'Ayurvedic Wellness',
+    culture: 'Indian',
+    description: 'Ancient Indian system of holistic health',
+    practices: [
+      {
+        id: 'p1',
+        name: 'Dosha Assessment',
+        description: 'Understand your body constitution',
+        instructions: 'Complete a comprehensive assessment to determine your dosha type',
+        duration: 15,
+        category: 'ritual',
+      },
+      {
+        id: 'p2',
+        name: 'Pranayama',
+        description: 'Breathing exercises for balance',
+        instructions: 'Practice controlled breathing techniques',
+        duration: 10,
+        category: 'meditation',
+      },
+    ],
+    philosophy: 'Balance of mind, body, and spirit through natural practices',
+    benefits: ['Improved digestion', 'Better sleep', 'Reduced stress', 'Enhanced immunity'],
+    enabled: false,
+    isActive: false,
+  },
+  {
+    id: '2',
+    name: 'Traditional Chinese Medicine',
+    culture: 'Chinese',
+    description: 'Holistic approach to health and wellness',
+    practices: [
+      {
+        id: 'p3',
+        name: 'Qi Gong',
+        description: 'Gentle movements for energy flow',
+        instructions: 'Practice slow, flowing movements to cultivate qi',
+        duration: 20,
+        category: 'movement',
+      },
+      {
+        id: 'p4',
+        name: 'Acupressure',
+        description: 'Pressure point therapy',
+        instructions: 'Apply gentle pressure to specific points on the body',
+        duration: 15,
+        category: 'healing',
+      },
+    ],
+    philosophy: 'Harmony between yin and yang energies for optimal health',
+    benefits: ['Improved energy flow', 'Pain relief', 'Better emotional balance', 'Enhanced vitality'],
+    enabled: true,
+    isActive: true,
+  },
+];
