@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Share, I18nManager } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { colors } from '@/constants/colors';
+import { useSettingsStore } from '@/store/settings-store';
+import { getTranslation, isRTL } from '@/constants/languages';
 import { Card } from '@/components/Card';
 import { 
   Shield, 
@@ -10,7 +12,7 @@ import {
   Heart, 
   Pill,
   Download,
-  Share,
+  Share as ShareIcon,
   Lock,
   CheckCircle2,
   Calendar,
@@ -25,6 +27,16 @@ import {
 export default function HealthPassportScreen() {
   const [activeSection, setActiveSection] = useState<'overview' | 'records' | 'sharing'>('overview');
   const [isPrivacyMode, setIsPrivacyMode] = useState(false);
+  const { settings } = useSettingsStore();
+  
+  const t = (key: string) => getTranslation(settings.language, key);
+  const isRTLLayout = isRTL(settings.language);
+  
+  // Set RTL layout
+  React.useEffect(() => {
+    I18nManager.allowRTL(true);
+    I18nManager.forceRTL(isRTLLayout);
+  }, [isRTLLayout]);
   
   const healthData = {
     personalInfo: {
@@ -104,20 +116,63 @@ export default function HealthPassportScreen() {
     ],
   };
   
+  const generateQRCode = () => {
+    try {
+      // Create a simple health passport data object
+      const qrData = {
+        name: isPrivacyMode ? '••••••••' : healthData.personalInfo.name,
+        bloodType: healthData.personalInfo.bloodType,
+        allergies: healthData.personalInfo.allergies,
+        emergencyContact: isPrivacyMode ? '••••••••' : healthData.personalInfo.emergencyContact.phone,
+        lastUpdated: new Date().toISOString(),
+        id: 'health-passport-' + Date.now()
+      };
+      
+      // In a real app, you would use a QR code library like react-native-qrcode-svg
+      // For now, we'll show the data that would be encoded
+      const qrString = JSON.stringify(qrData);
+      
+      Alert.alert(
+        t('qrCodeGenerated'),
+        `${t('quickAccessQR')}\n\n${t('shareQRCode')}?`,
+        [
+          { text: t('cancel'), style: 'cancel' },
+          { 
+            text: t('share'), 
+            onPress: () => shareQRCode(qrString)
+          }
+        ]
+      );
+    } catch (error) {
+      Alert.alert(t('error'), t('qrCodeError'));
+    }
+  };
+  
+  const shareQRCode = async (qrData: string) => {
+    try {
+      await Share.share({
+        message: `${t('healthPassportTitle')}\n\n${qrData}`,
+        title: t('healthPassportTitle'),
+      });
+    } catch (error) {
+      console.error('Error sharing QR code:', error);
+    }
+  };
+  
   const renderOverview = () => (
     <View>
       <Card style={styles.headerCard}>
-        <View style={styles.passportHeader}>
+        <View style={[styles.passportHeader, isRTLLayout && styles.passportHeaderRTL]}>
           <Shield size={32} color={colors.primary} />
           <View style={styles.passportInfo}>
-            <Text style={styles.passportTitle}>Health Passport</Text>
-            <Text style={styles.passportSubtitle}>
-              Blockchain-secured • Universal Access • HIPAA Compliant
+            <Text style={[styles.passportTitle, isRTLLayout && styles.textRTL]}>{t('healthPassport')}</Text>
+            <Text style={[styles.passportSubtitle, isRTLLayout && styles.textRTL]}>
+              {t('blockchainSecured')} • {t('universalAccess')} • {t('hipaaCompliant')}
             </Text>
           </View>
           <TouchableOpacity 
             style={styles.qrButton}
-            onPress={() => Alert.alert('QR Code', 'Generate QR code for quick access')}
+            onPress={generateQRCode}
           >
             <QrCode size={24} color={colors.primary} />
           </TouchableOpacity>
@@ -125,9 +180,9 @@ export default function HealthPassportScreen() {
       </Card>
       
       <Card style={styles.personalCard}>
-        <View style={styles.personalHeader}>
+        <View style={[styles.personalHeader, isRTLLayout && styles.personalHeaderRTL]}>
           <User size={20} color={colors.primary} />
-          <Text style={styles.sectionTitle}>Personal Information</Text>
+          <Text style={[styles.sectionTitle, isRTLLayout && styles.textRTL]}>{t('personalInformation')}</Text>
           <TouchableOpacity 
             style={styles.privacyToggle}
             onPress={() => setIsPrivacyMode(!isPrivacyMode)}
@@ -141,40 +196,40 @@ export default function HealthPassportScreen() {
         </View>
         
         <View style={styles.personalInfo}>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Full Name</Text>
-            <Text style={styles.infoValue}>
+          <View style={[styles.infoRow, isRTLLayout && styles.infoRowRTL]}>
+            <Text style={[styles.infoLabel, isRTLLayout && styles.textRTL]}>{t('fullName')}</Text>
+            <Text style={[styles.infoValue, isRTLLayout && styles.textRTL]}>
               {isPrivacyMode ? '••••••••' : healthData.personalInfo.name}
             </Text>
           </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Date of Birth</Text>
-            <Text style={styles.infoValue}>
+          <View style={[styles.infoRow, isRTLLayout && styles.infoRowRTL]}>
+            <Text style={[styles.infoLabel, isRTLLayout && styles.textRTL]}>{t('age')}</Text>
+            <Text style={[styles.infoValue, isRTLLayout && styles.textRTL]}>
               {isPrivacyMode ? '••••••••' : healthData.personalInfo.dateOfBirth}
             </Text>
           </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Blood Type</Text>
-            <Text style={styles.infoValue}>{healthData.personalInfo.bloodType}</Text>
+          <View style={[styles.infoRow, isRTLLayout && styles.infoRowRTL]}>
+            <Text style={[styles.infoLabel, isRTLLayout && styles.textRTL]}>{t('bloodType')}</Text>
+            <Text style={[styles.infoValue, isRTLLayout && styles.textRTL]}>{healthData.personalInfo.bloodType}</Text>
           </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Allergies</Text>
-            <Text style={styles.infoValue}>
+          <View style={[styles.infoRow, isRTLLayout && styles.infoRowRTL]}>
+            <Text style={[styles.infoLabel, isRTLLayout && styles.textRTL]}>{t('allergies')}</Text>
+            <Text style={[styles.infoValue, isRTLLayout && styles.textRTL]}>
               {healthData.personalInfo.allergies.join(', ')}
             </Text>
           </View>
         </View>
         
         <View style={styles.emergencyContact}>
-          <Text style={styles.emergencyTitle}>Emergency Contact</Text>
+          <Text style={[styles.emergencyTitle, isRTLLayout && styles.textRTL]}>{t('emergencyContact')}</Text>
           <View style={styles.contactInfo}>
-            <Text style={styles.contactName}>
+            <Text style={[styles.contactName, isRTLLayout && styles.textRTL]}>
               {isPrivacyMode ? '••••••••' : healthData.personalInfo.emergencyContact.name}
             </Text>
-            <Text style={styles.contactRelation}>
-              {healthData.personalInfo.emergencyContact.relationship}
+            <Text style={[styles.contactRelation, isRTLLayout && styles.textRTL]}>
+              {t('spouse')}
             </Text>
-            <Text style={styles.contactPhone}>
+            <Text style={[styles.contactPhone, isRTLLayout && styles.textRTL]}>
               {isPrivacyMode ? '••••••••' : healthData.personalInfo.emergencyContact.phone}
             </Text>
           </View>
@@ -182,52 +237,52 @@ export default function HealthPassportScreen() {
       </Card>
       
       <Card style={styles.vitalsCard}>
-        <View style={styles.vitalsHeader}>
+        <View style={[styles.vitalsHeader, isRTLLayout && styles.vitalsHeaderRTL]}>
           <Activity size={20} color={colors.primary} />
-          <Text style={styles.sectionTitle}>Current Vital Signs</Text>
-          <Text style={styles.lastUpdated}>
-            Updated: {healthData.vitalSigns.lastUpdated}
+          <Text style={[styles.sectionTitle, isRTLLayout && styles.textRTL]}>{t('currentVitalSigns')}</Text>
+          <Text style={[styles.lastUpdated, isRTLLayout && styles.textRTL]}>
+            {t('updated')}: {healthData.vitalSigns.lastUpdated}
           </Text>
         </View>
         
         <View style={styles.vitalsGrid}>
           <View style={styles.vitalItem}>
-            <Text style={styles.vitalLabel}>Blood Pressure</Text>
-            <Text style={styles.vitalValue}>{healthData.vitalSigns.bloodPressure}</Text>
+            <Text style={[styles.vitalLabel, isRTLLayout && styles.textRTL]}>{t('bloodPressure')}</Text>
+            <Text style={[styles.vitalValue, isRTLLayout && styles.textRTL]}>{healthData.vitalSigns.bloodPressure}</Text>
           </View>
           <View style={styles.vitalItem}>
-            <Text style={styles.vitalLabel}>Heart Rate</Text>
-            <Text style={styles.vitalValue}>{healthData.vitalSigns.heartRate}</Text>
+            <Text style={[styles.vitalLabel, isRTLLayout && styles.textRTL]}>{t('heartRate')}</Text>
+            <Text style={[styles.vitalValue, isRTLLayout && styles.textRTL]}>{healthData.vitalSigns.heartRate}</Text>
           </View>
           <View style={styles.vitalItem}>
-            <Text style={styles.vitalLabel}>Weight</Text>
-            <Text style={styles.vitalValue}>{healthData.vitalSigns.weight}</Text>
+            <Text style={[styles.vitalLabel, isRTLLayout && styles.textRTL]}>{t('weight')}</Text>
+            <Text style={[styles.vitalValue, isRTLLayout && styles.textRTL]}>{healthData.vitalSigns.weight}</Text>
           </View>
           <View style={styles.vitalItem}>
-            <Text style={styles.vitalLabel}>BMI</Text>
-            <Text style={styles.vitalValue}>{healthData.vitalSigns.bmi}</Text>
+            <Text style={[styles.vitalLabel, isRTLLayout && styles.textRTL]}>{t('bmi')}</Text>
+            <Text style={[styles.vitalValue, isRTLLayout && styles.textRTL]}>{healthData.vitalSigns.bmi}</Text>
           </View>
         </View>
       </Card>
       
       <Card style={styles.medicationsCard}>
-        <View style={styles.medicationsHeader}>
+        <View style={[styles.medicationsHeader, isRTLLayout && styles.medicationsHeaderRTL]}>
           <Pill size={20} color={colors.primary} />
-          <Text style={styles.sectionTitle}>Current Medications</Text>
+          <Text style={[styles.sectionTitle, isRTLLayout && styles.textRTL]}>{t('currentMedications')}</Text>
         </View>
         
         {healthData.medications.map((medication, index) => (
-          <View key={index} style={styles.medicationItem}>
+          <View key={index} style={[styles.medicationItem, isRTLLayout && styles.medicationItemRTL]}>
             <View style={styles.medicationInfo}>
-              <Text style={styles.medicationName}>{medication.name}</Text>
-              <Text style={styles.medicationDetails}>
+              <Text style={[styles.medicationName, isRTLLayout && styles.textRTL]}>{medication.name}</Text>
+              <Text style={[styles.medicationDetails, isRTLLayout && styles.textRTL]}>
                 {medication.dosage} • {medication.frequency}
               </Text>
-              <Text style={styles.medicationPrescriber}>
-                Prescribed by: {medication.prescriber}
+              <Text style={[styles.medicationPrescriber, isRTLLayout && styles.textRTL]}>
+                {t('prescribedBy')}: {medication.prescriber}
               </Text>
             </View>
-            <Text style={styles.medicationDate}>{medication.startDate}</Text>
+            <Text style={[styles.medicationDate, isRTLLayout && styles.textRTL]}>{medication.startDate}</Text>
           </View>
         ))}
       </Card>
@@ -238,21 +293,21 @@ export default function HealthPassportScreen() {
     <View>
       <Card style={styles.recordsHeader}>
         <FileText size={24} color={colors.primary} />
-        <Text style={styles.recordsTitle}>Medical Records</Text>
-        <Text style={styles.recordsSubtitle}>
-          Complete medical history with blockchain verification
+        <Text style={[styles.recordsTitle, isRTLLayout && styles.textRTL]}>{t('medicalRecords')}</Text>
+        <Text style={[styles.recordsSubtitle, isRTLLayout && styles.textRTL]}>
+          {t('downloadCompleteHealthPassport')}
         </Text>
       </Card>
       
       {healthData.medicalRecords.map((record) => (
         <Card key={record.id} style={styles.recordCard}>
-          <View style={styles.recordHeader}>
+          <View style={[styles.recordHeader, isRTLLayout && styles.recordHeaderRTL]}>
             <View style={styles.recordInfo}>
-              <Text style={styles.recordType}>{record.type}</Text>
-              <Text style={styles.recordProvider}>{record.provider}</Text>
+              <Text style={[styles.recordType, isRTLLayout && styles.textRTL]}>{record.type}</Text>
+              <Text style={[styles.recordProvider, isRTLLayout && styles.textRTL]}>{record.provider}</Text>
             </View>
             <View style={styles.recordMeta}>
-              <Text style={styles.recordDate}>{record.date}</Text>
+              <Text style={[styles.recordDate, isRTLLayout && styles.textRTL]}>{record.date}</Text>
               <View style={[
                 styles.recordStatus,
                 { backgroundColor: record.status === 'active' ? colors.success + '20' : colors.primary + '20' }
@@ -267,22 +322,22 @@ export default function HealthPassportScreen() {
             </View>
           </View>
           
-          <Text style={styles.recordSummary}>{record.summary}</Text>
+          <Text style={[styles.recordSummary, isRTLLayout && styles.textRTL]}>{record.summary}</Text>
           
           <View style={styles.recordActions}>
             <TouchableOpacity 
               style={styles.recordAction}
-              onPress={() => Alert.alert('View Record', `View details for ${record.type}`)}
+              onPress={() => Alert.alert(t('view'), `${t('viewDetails')} ${record.type}`)}
             >
               <Eye size={16} color={colors.primary} />
-              <Text style={styles.recordActionText}>View</Text>
+              <Text style={[styles.recordActionText, isRTLLayout && styles.textRTL]}>{t('view')}</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.recordAction}
-              onPress={() => Alert.alert('Download', `Download ${record.type}`)}
+              onPress={() => Alert.alert(t('download'), `${t('download')} ${record.type}`)}
             >
               <Download size={16} color={colors.primary} />
-              <Text style={styles.recordActionText}>Download</Text>
+              <Text style={[styles.recordActionText, isRTLLayout && styles.textRTL]}>{t('download')}</Text>
             </TouchableOpacity>
           </View>
         </Card>
@@ -290,9 +345,9 @@ export default function HealthPassportScreen() {
       
       <TouchableOpacity 
         style={styles.addRecordButton}
-        onPress={() => Alert.alert('Add Record', 'Upload new medical record')}
+        onPress={() => Alert.alert(t('addMedicalRecord'), t('addMedicalRecord'))}
       >
-        <Text style={styles.addRecordText}>+ Add Medical Record</Text>
+        <Text style={[styles.addRecordText, isRTLLayout && styles.textRTL]}>+ {t('addMedicalRecord')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -300,35 +355,35 @@ export default function HealthPassportScreen() {
   const renderSharing = () => (
     <View>
       <Card style={styles.sharingHeader}>
-        <Share size={24} color={colors.primary} />
-        <Text style={styles.sharingTitle}>Data Sharing & Access</Text>
-        <Text style={styles.sharingSubtitle}>
-          Control who can access your health information
+        <ShareIcon size={24} color={colors.primary} />
+        <Text style={[styles.sharingTitle, isRTLLayout && styles.textRTL]}>{t('dataSharingAccess')}</Text>
+        <Text style={[styles.sharingSubtitle, isRTLLayout && styles.textRTL]}>
+          {t('controlWhoCanAccess')}
         </Text>
       </Card>
       
       <Card style={styles.accessLogCard}>
-        <Text style={styles.accessLogTitle}>Recent Access Log</Text>
+        <Text style={[styles.accessLogTitle, isRTLLayout && styles.textRTL]}>{t('recentAccessLog')}</Text>
         {healthData.accessLog.map((log, index) => (
-          <View key={index} style={styles.accessLogItem}>
+          <View key={index} style={[styles.accessLogItem, isRTLLayout && styles.accessLogItemRTL]}>
             <View style={styles.accessLogInfo}>
-              <Text style={styles.accessLogAccessor}>{log.accessor}</Text>
-              <Text style={styles.accessLogPurpose}>{log.purpose}</Text>
-              <Text style={styles.accessLogData}>{log.dataAccessed}</Text>
+              <Text style={[styles.accessLogAccessor, isRTLLayout && styles.textRTL]}>{log.accessor}</Text>
+              <Text style={[styles.accessLogPurpose, isRTLLayout && styles.textRTL]}>{log.purpose}</Text>
+              <Text style={[styles.accessLogData, isRTLLayout && styles.textRTL]}>{log.dataAccessed}</Text>
             </View>
-            <Text style={styles.accessLogDate}>{log.date}</Text>
+            <Text style={[styles.accessLogDate, isRTLLayout && styles.textRTL]}>{log.date}</Text>
           </View>
         ))}
       </Card>
       
       <Card style={styles.permissionsCard}>
-        <Text style={styles.permissionsTitle}>Sharing Permissions</Text>
+        <Text style={[styles.permissionsTitle, isRTLLayout && styles.textRTL]}>{t('sharingPermissions')}</Text>
         
-        <View style={styles.permissionItem}>
+        <View style={[styles.permissionItem, isRTLLayout && styles.permissionItemRTL]}>
           <View style={styles.permissionInfo}>
-            <Text style={styles.permissionName}>Emergency Services</Text>
-            <Text style={styles.permissionDescription}>
-              Full access during emergencies
+            <Text style={[styles.permissionName, isRTLLayout && styles.textRTL]}>{t('emergencyServices')}</Text>
+            <Text style={[styles.permissionDescription, isRTLLayout && styles.textRTL]}>
+              {t('fullAccessDuringEmergencies')}
             </Text>
           </View>
           <View style={styles.permissionStatus}>
@@ -336,11 +391,11 @@ export default function HealthPassportScreen() {
           </View>
         </View>
         
-        <View style={styles.permissionItem}>
+        <View style={[styles.permissionItem, isRTLLayout && styles.permissionItemRTL]}>
           <View style={styles.permissionInfo}>
-            <Text style={styles.permissionName}>Primary Care Physician</Text>
-            <Text style={styles.permissionDescription}>
-              Full medical history access
+            <Text style={[styles.permissionName, isRTLLayout && styles.textRTL]}>{t('primaryCarePhysician')}</Text>
+            <Text style={[styles.permissionDescription, isRTLLayout && styles.textRTL]}>
+              {t('fullMedicalHistoryAccess')}
             </Text>
           </View>
           <View style={styles.permissionStatus}>
@@ -348,11 +403,11 @@ export default function HealthPassportScreen() {
           </View>
         </View>
         
-        <View style={styles.permissionItem}>
+        <View style={[styles.permissionItem, isRTLLayout && styles.permissionItemRTL]}>
           <View style={styles.permissionInfo}>
-            <Text style={styles.permissionName}>Specialists</Text>
-            <Text style={styles.permissionDescription}>
-              Relevant records only
+            <Text style={[styles.permissionName, isRTLLayout && styles.textRTL]}>{t('specialists')}</Text>
+            <Text style={[styles.permissionDescription, isRTLLayout && styles.textRTL]}>
+              {t('relevantRecordsOnly')}
             </Text>
           </View>
           <View style={styles.permissionStatus}>
@@ -362,33 +417,33 @@ export default function HealthPassportScreen() {
         
         <TouchableOpacity 
           style={styles.managePermissionsButton}
-          onPress={() => Alert.alert('Manage Permissions', 'Configure data sharing permissions')}
+          onPress={() => Alert.alert(t('managePermissions'), t('managePermissions'))}
         >
-          <Text style={styles.managePermissionsText}>Manage Permissions</Text>
+          <Text style={[styles.managePermissionsText, isRTLLayout && styles.textRTL]}>{t('managePermissions')}</Text>
         </TouchableOpacity>
       </Card>
       
       <Card style={styles.exportCard}>
-        <Text style={styles.exportTitle}>Export Health Data</Text>
-        <Text style={styles.exportDescription}>
-          Download your complete health passport for personal records or sharing with new providers.
+        <Text style={[styles.exportTitle, isRTLLayout && styles.textRTL]}>{t('exportHealthData')}</Text>
+        <Text style={[styles.exportDescription, isRTLLayout && styles.textRTL]}>
+          {t('downloadCompleteHealthPassport')}
         </Text>
         
         <View style={styles.exportActions}>
           <TouchableOpacity 
             style={styles.exportButton}
-            onPress={() => Alert.alert('Export PDF', 'Generate PDF health passport')}
+            onPress={() => Alert.alert(t('exportPDF'), t('exportPDF'))}
           >
             <Download size={16} color={colors.black} />
-            <Text style={styles.exportButtonText}>Export PDF</Text>
+            <Text style={styles.exportButtonText}>{t('exportPDF')}</Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
             style={styles.shareButton}
-            onPress={() => Alert.alert('Share', 'Share health passport securely')}
+            onPress={() => Alert.alert(t('shareSecurely'), t('shareSecurely'))}
           >
-            <Share size={16} color={colors.primary} />
-            <Text style={styles.shareButtonText}>Share Securely</Text>
+            <ShareIcon size={16} color={colors.primary} />
+            <Text style={styles.shareButtonText}>{t('shareSecurely')}</Text>
           </TouchableOpacity>
         </View>
       </Card>
@@ -397,7 +452,7 @@ export default function HealthPassportScreen() {
   
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: 'Health Passport' }} />
+      <Stack.Screen options={{ title: t('healthPassport') }} />
       
       <View style={styles.tabsContainer}>
         <TouchableOpacity 
@@ -405,8 +460,8 @@ export default function HealthPassportScreen() {
           onPress={() => setActiveSection('overview')}
         >
           <Shield size={18} color={activeSection === 'overview' ? colors.primary : colors.textSecondary} />
-          <Text style={[styles.tabText, activeSection === 'overview' && styles.activeTabText]}>
-            Overview
+          <Text style={[styles.tabText, activeSection === 'overview' && styles.activeTabText, isRTLLayout && styles.textRTL]}>
+            {t('overview')}
           </Text>
         </TouchableOpacity>
         
@@ -415,8 +470,8 @@ export default function HealthPassportScreen() {
           onPress={() => setActiveSection('records')}
         >
           <FileText size={18} color={activeSection === 'records' ? colors.primary : colors.textSecondary} />
-          <Text style={[styles.tabText, activeSection === 'records' && styles.activeTabText]}>
-            Records
+          <Text style={[styles.tabText, activeSection === 'records' && styles.activeTabText, isRTLLayout && styles.textRTL]}>
+            {t('records')}
           </Text>
         </TouchableOpacity>
         
@@ -424,9 +479,9 @@ export default function HealthPassportScreen() {
           style={[styles.tab, activeSection === 'sharing' && styles.activeTab]}
           onPress={() => setActiveSection('sharing')}
         >
-          <Share size={18} color={activeSection === 'sharing' ? colors.primary : colors.textSecondary} />
-          <Text style={[styles.tabText, activeSection === 'sharing' && styles.activeTabText]}>
-            Sharing
+          <ShareIcon size={18} color={activeSection === 'sharing' ? colors.primary : colors.textSecondary} />
+          <Text style={[styles.tabText, activeSection === 'sharing' && styles.activeTabText, isRTLLayout && styles.textRTL]}>
+            {t('sharing')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -477,6 +532,10 @@ const styles = StyleSheet.create({
   activeTabText: {
     color: colors.primary,
   },
+  textRTL: {
+    textAlign: 'right',
+    writingDirection: 'rtl',
+  },
   scrollContent: {
     padding: 16,
     paddingBottom: 32,
@@ -487,6 +546,9 @@ const styles = StyleSheet.create({
   passportHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  passportHeaderRTL: {
+    flexDirection: 'row-reverse',
   },
   passportInfo: {
     marginLeft: 12,
@@ -518,6 +580,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
+  personalHeaderRTL: {
+    flexDirection: 'row-reverse',
+  },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
@@ -538,6 +603,9 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+  },
+  infoRowRTL: {
+    flexDirection: 'row-reverse',
   },
   infoLabel: {
     fontSize: 14,
@@ -584,6 +652,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
+  vitalsHeaderRTL: {
+    flexDirection: 'row-reverse',
+  },
   lastUpdated: {
     fontSize: 10,
     color: colors.textSecondary,
@@ -619,6 +690,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
+  medicationsHeaderRTL: {
+    flexDirection: 'row-reverse',
+  },
   medicationItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -626,6 +700,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+  },
+  medicationItemRTL: {
+    flexDirection: 'row-reverse',
   },
   medicationInfo: {
     flex: 1,
@@ -673,6 +750,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: 8,
+  },
+  recordHeaderRTL: {
+    flexDirection: 'row-reverse',
   },
   recordInfo: {
     flex: 1,
@@ -771,6 +851,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
+  accessLogItemRTL: {
+    flexDirection: 'row-reverse',
+  },
   accessLogInfo: {
     flex: 1,
   },
@@ -809,6 +892,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+  },
+  permissionItemRTL: {
+    flexDirection: 'row-reverse',
   },
   permissionInfo: {
     flex: 1,

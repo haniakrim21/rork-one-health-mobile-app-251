@@ -249,7 +249,6 @@ export const translations = {
     motivation: 'التحفيز',
     newPlan: 'خطة جديدة',
     dailyFocus: 'التركيز اليومي',
-    quickActions: 'إجراءات سريعة',
     
     // Common Status
     normal: 'طبيعي',
@@ -533,22 +532,6 @@ export const translations = {
     errorText: 'نص الخطأ',
     userNotFound: 'المستخدم غير موجود',
     
-    // Health Screen specific
-    quickActionsTitle: 'إجراءات سريعة',
-    
-    // Fitness Screen specific
-    heroStats: 'إحصائيات البطل',
-    
-    // Wellness Screen specific
-    quickActionsWellness: 'إجراءات سريعة',
-    
-    // AI Chat Screen specific
-    friend: 'صديق',
-    
-    // Profile Screen specific
-    daysAgoProfile: 'أيام مضت',
-    weekAgoProfile: 'أسبوع مضى',
-    
     // Settings Screen specific
     resetSettingsConfirm: 'هل أنت متأكد من أنك تريد إعادة تعيين جميع الإعدادات إلى الافتراضية؟',
     clearCacheConfirm: 'هل أنت متأكد من أنك تريد مسح ذاكرة التخزين المؤقت للتطبيق؟',
@@ -557,6 +540,64 @@ export const translations = {
     settingsResetSuccess: 'تم إعادة تعيين الإعدادات إلى الافتراضية',
     cacheCleared: 'تم مسح ذاكرة التخزين المؤقت بنجاح',
     failedToClearCache: 'فشل في مسح ذاكرة التخزين المؤقت',
+    
+    // QR Code related
+    generateQRCode: 'إنشاء رمز QR',
+    qrCodeGenerated: 'تم إنشاء رمز QR',
+    shareQRCode: 'مشاركة رمز QR',
+    scanQRCode: 'مسح رمز QR',
+    qrCodeError: 'خطأ في إنشاء رمز QR',
+    
+    // Health Passport specific
+    healthPassportTitle: 'جواز الصحة',
+    blockchainSecured: 'محمي بالبلوك تشين',
+    universalAccess: 'وصول عالمي',
+    hipaaCompliant: 'متوافق مع HIPAA',
+    personalInformation: 'المعلومات الشخصية',
+    emergencyContact: 'جهة الاتصال في حالات الطوارئ',
+    currentVitalSigns: 'العلامات الحيوية الحالية',
+    currentMedications: 'الأدوية الحالية',
+    medicalRecords: 'السجلات الطبية',
+    dataSharingAccess: 'مشاركة البيانات والوصول',
+    recentAccessLog: 'سجل الوصول الأخير',
+    sharingPermissions: 'أذونات المشاركة',
+    emergencyServices: 'خدمات الطوارئ',
+    fullAccessDuringEmergencies: 'وصول كامل أثناء حالات الطوارئ',
+    primaryCarePhysician: 'طبيب الرعاية الأولية',
+    fullMedicalHistoryAccess: 'وصول كامل للتاريخ الطبي',
+    specialists: 'الأخصائيون',
+    relevantRecordsOnly: 'السجلات ذات الصلة فقط',
+    managePermissions: 'إدارة الأذونات',
+    exportHealthData: 'تصدير البيانات الصحية',
+    downloadCompleteHealthPassport: 'تحميل جواز الصحة الكامل للسجلات الشخصية أو المشاركة مع مقدمي الخدمة الجدد.',
+    exportPDF: 'تصدير PDF',
+    shareSecurely: 'مشاركة آمنة',
+    bloodType: 'فصيلة الدم',
+    allergies: 'الحساسية',
+    spouse: 'الزوج/الزوجة',
+    relationship: 'العلاقة',
+    phone: 'الهاتف',
+    updated: 'محدث',
+    bmi: 'مؤشر كتلة الجسم',
+    prescribedBy: 'وصفه',
+    selfAdministered: 'إدارة ذاتية',
+    labResults: 'نتائج المختبر',
+    vaccination: 'التطعيم',
+    prescription: 'الوصفة الطبية',
+    routineConsultation: 'استشارة روتينية',
+    labResultsUpload: 'رفع نتائج المختبر',
+    addMedicalRecord: 'إضافة سجل طبي',
+    controlWhoCanAccess: 'تحكم في من يمكنه الوصول إلى معلوماتك الصحية',
+    accessor: 'الوصول',
+    purpose: 'الغرض',
+    dataAccessed: 'البيانات المُتاحة',
+    active: 'نشط',
+    download: 'تحميل',
+    share: 'مشاركة',
+    overview: 'نظرة عامة',
+    records: 'السجلات',
+    sharing: 'المشاركة',
+    quickAccessQR: 'رمز QR للوصول السريع',
   },
   English: {
     // Settings
@@ -1064,23 +1105,6 @@ export const translations = {
     errorText: 'Error text',
     userNotFound: 'User not found',
     
-    // Health Screen specific
-    quickActionsTitle: 'Quick Actions',
-    
-    // Fitness Screen specific
-    heroStats: 'Hero Stats',
-    
-    // Wellness Screen specific
-    quickActionsWellness: 'Quick Actions',
-    mindfulnessWellness: 'Mindfulness',
-    
-    // AI Chat Screen specific
-    friend: 'friend',
-    
-    // Profile Screen specific
-    daysAgoProfile: 'days ago',
-    weekAgoProfile: 'week ago',
-    
     // Settings Screen specific
     resetSettingsConfirm: 'Are you sure you want to reset all settings to default?',
     clearCacheConfirm: 'Are you sure you want to clear the app cache?',
@@ -1089,6 +1113,64 @@ export const translations = {
     settingsResetSuccess: 'Settings have been reset to default',
     cacheCleared: 'Cache cleared successfully',
     failedToClearCache: 'Failed to clear cache',
+    
+    // QR Code related
+    generateQRCode: 'Generate QR Code',
+    qrCodeGenerated: 'QR Code Generated',
+    shareQRCode: 'Share QR Code',
+    scanQRCode: 'Scan QR Code',
+    qrCodeError: 'Error generating QR code',
+    
+    // Health Passport specific
+    healthPassportTitle: 'Health Passport',
+    blockchainSecured: 'Blockchain-secured',
+    universalAccess: 'Universal Access',
+    hipaaCompliant: 'HIPAA Compliant',
+    personalInformation: 'Personal Information',
+    emergencyContact: 'Emergency Contact',
+    currentVitalSigns: 'Current Vital Signs',
+    currentMedications: 'Current Medications',
+    medicalRecords: 'Medical Records',
+    dataSharingAccess: 'Data Sharing & Access',
+    recentAccessLog: 'Recent Access Log',
+    sharingPermissions: 'Sharing Permissions',
+    emergencyServices: 'Emergency Services',
+    fullAccessDuringEmergencies: 'Full access during emergencies',
+    primaryCarePhysician: 'Primary Care Physician',
+    fullMedicalHistoryAccess: 'Full medical history access',
+    specialists: 'Specialists',
+    relevantRecordsOnly: 'Relevant records only',
+    managePermissions: 'Manage Permissions',
+    exportHealthData: 'Export Health Data',
+    downloadCompleteHealthPassport: 'Download your complete health passport for personal records or sharing with new providers.',
+    exportPDF: 'Export PDF',
+    shareSecurely: 'Share Securely',
+    bloodType: 'Blood Type',
+    allergies: 'Allergies',
+    spouse: 'Spouse',
+    relationship: 'Relationship',
+    phone: 'Phone',
+    updated: 'Updated',
+    bmi: 'BMI',
+    prescribedBy: 'Prescribed by',
+    selfAdministered: 'Self-administered',
+    labResults: 'Lab Results',
+    vaccination: 'Vaccination',
+    prescription: 'Prescription',
+    routineConsultation: 'Routine consultation',
+    labResultsUpload: 'Lab results upload',
+    addMedicalRecord: 'Add Medical Record',
+    controlWhoCanAccess: 'Control who can access your health information',
+    accessor: 'Accessor',
+    purpose: 'Purpose',
+    dataAccessed: 'Data Accessed',
+    active: 'active',
+    download: 'Download',
+    share: 'Share',
+    overview: 'Overview',
+    records: 'Records',
+    sharing: 'Sharing',
+    quickAccessQR: 'QR code for quick access',
   },
   Spanish: {
     // Settings
@@ -1596,23 +1678,6 @@ export const translations = {
     errorText: 'Texto de error',
     userNotFound: 'Usuario no encontrado',
     
-    // Health Screen specific
-    quickActionsTitle: 'Acciones Rápidas',
-    
-    // Fitness Screen specific
-    heroStats: 'Estadísticas Héroe',
-    
-    // Wellness Screen specific
-    quickActionsWellness: 'Acciones Rápidas',
-    mindfulnessWellness: 'Atención Plena',
-    
-    // AI Chat Screen specific
-    friend: 'amigo',
-    
-    // Profile Screen specific
-    daysAgoProfile: 'días atrás',
-    weekAgoProfile: 'hace una semana',
-    
     // Settings Screen specific
     resetSettingsConfirm: '¿Estás seguro de que quieres restablecer todas las configuraciones por defecto?',
     clearCacheConfirm: '¿Estás seguro de que quieres limpiar la caché de la aplicación?',
@@ -1621,6 +1686,64 @@ export const translations = {
     settingsResetSuccess: 'Las configuraciones han sido restablecidas por defecto',
     cacheCleared: 'Caché limpiada exitosamente',
     failedToClearCache: 'Error al limpiar la caché',
+    
+    // QR Code related
+    generateQRCode: 'Generar Código QR',
+    qrCodeGenerated: 'Código QR Generado',
+    shareQRCode: 'Compartir Código QR',
+    scanQRCode: 'Escanear Código QR',
+    qrCodeError: 'Error al generar código QR',
+    
+    // Health Passport specific
+    healthPassportTitle: 'Pasaporte de Salud',
+    blockchainSecured: 'Asegurado por blockchain',
+    universalAccess: 'Acceso Universal',
+    hipaaCompliant: 'Cumple con HIPAA',
+    personalInformation: 'Información Personal',
+    emergencyContact: 'Contacto de Emergencia',
+    currentVitalSigns: 'Signos Vitales Actuales',
+    currentMedications: 'Medicamentos Actuales',
+    medicalRecords: 'Registros Médicos',
+    dataSharingAccess: 'Compartir Datos y Acceso',
+    recentAccessLog: 'Registro de Acceso Reciente',
+    sharingPermissions: 'Permisos de Compartir',
+    emergencyServices: 'Servicios de Emergencia',
+    fullAccessDuringEmergencies: 'Acceso completo durante emergencias',
+    primaryCarePhysician: 'Médico de Atención Primaria',
+    fullMedicalHistoryAccess: 'Acceso completo al historial médico',
+    specialists: 'Especialistas',
+    relevantRecordsOnly: 'Solo registros relevantes',
+    managePermissions: 'Gestionar Permisos',
+    exportHealthData: 'Exportar Datos de Salud',
+    downloadCompleteHealthPassport: 'Descarga tu pasaporte de salud completo para registros personales o compartir con nuevos proveedores.',
+    exportPDF: 'Exportar PDF',
+    shareSecurely: 'Compartir de Forma Segura',
+    bloodType: 'Tipo de Sangre',
+    allergies: 'Alergias',
+    spouse: 'Cónyuge',
+    relationship: 'Relación',
+    phone: 'Teléfono',
+    updated: 'Actualizado',
+    bmi: 'IMC',
+    prescribedBy: 'Prescrito por',
+    selfAdministered: 'Auto-administrado',
+    labResults: 'Resultados de Laboratorio',
+    vaccination: 'Vacunación',
+    prescription: 'Prescripción',
+    routineConsultation: 'Consulta de rutina',
+    labResultsUpload: 'Subida de resultados de laboratorio',
+    addMedicalRecord: 'Agregar Registro Médico',
+    controlWhoCanAccess: 'Controla quién puede acceder a tu información de salud',
+    accessor: 'Acceso',
+    purpose: 'Propósito',
+    dataAccessed: 'Datos Accedidos',
+    active: 'activo',
+    download: 'Descargar',
+    share: 'Compartir',
+    overview: 'Resumen',
+    records: 'Registros',
+    sharing: 'Compartir',
+    quickAccessQR: 'Código QR para acceso rápido',
   },
   French: {
     // Settings
@@ -2128,23 +2251,6 @@ export const translations = {
     errorText: 'Texte d\'erreur',
     userNotFound: 'Utilisateur non trouvé',
     
-    // Health Screen specific
-    quickActionsTitle: 'Actions Rapides',
-    
-    // Fitness Screen specific
-    heroStats: 'Statistiques Héros',
-    
-    // Wellness Screen specific
-    quickActionsWellness: 'Actions Rapides',
-    mindfulnessWellness: 'Pleine Conscience',
-    
-    // AI Chat Screen specific
-    friend: 'ami',
-    
-    // Profile Screen specific
-    daysAgoProfile: 'il y a des jours',
-    weekAgoProfile: 'il y a une semaine',
-    
     // Settings Screen specific
     resetSettingsConfirm: 'Êtes-vous sûr de vouloir réinitialiser tous les paramètres par défaut ?',
     clearCacheConfirm: 'Êtes-vous sûr de vouloir vider le cache de l\'application ?',
@@ -2153,6 +2259,64 @@ export const translations = {
     settingsResetSuccess: 'Les paramètres ont été réinitialisés par défaut',
     cacheCleared: 'Cache vidé avec succès',
     failedToClearCache: 'Échec de la vidange du cache',
+    
+    // QR Code related
+    generateQRCode: 'Générer un Code QR',
+    qrCodeGenerated: 'Code QR Généré',
+    shareQRCode: 'Partager le Code QR',
+    scanQRCode: 'Scanner le Code QR',
+    qrCodeError: 'Erreur lors de la génération du code QR',
+    
+    // Health Passport specific
+    healthPassportTitle: 'Passeport Santé',
+    blockchainSecured: 'Sécurisé par blockchain',
+    universalAccess: 'Accès Universel',
+    hipaaCompliant: 'Conforme HIPAA',
+    personalInformation: 'Informations Personnelles',
+    emergencyContact: 'Contact d\'Urgence',
+    currentVitalSigns: 'Signes Vitaux Actuels',
+    currentMedications: 'Médicaments Actuels',
+    medicalRecords: 'Dossiers Médicaux',
+    dataSharingAccess: 'Partage de Données et Accès',
+    recentAccessLog: 'Journal d\'Accès Récent',
+    sharingPermissions: 'Autorisations de Partage',
+    emergencyServices: 'Services d\'Urgence',
+    fullAccessDuringEmergencies: 'Accès complet pendant les urgences',
+    primaryCarePhysician: 'Médecin de Soins Primaires',
+    fullMedicalHistoryAccess: 'Accès complet à l\'historique médical',
+    specialists: 'Spécialistes',
+    relevantRecordsOnly: 'Dossiers pertinents uniquement',
+    managePermissions: 'Gérer les Autorisations',
+    exportHealthData: 'Exporter les Données de Santé',
+    downloadCompleteHealthPassport: 'Téléchargez votre passeport santé complet pour les dossiers personnels ou le partage avec de nouveaux fournisseurs.',
+    exportPDF: 'Exporter PDF',
+    shareSecurely: 'Partager en Sécurité',
+    bloodType: 'Groupe Sanguin',
+    allergies: 'Allergies',
+    spouse: 'Conjoint(e)',
+    relationship: 'Relation',
+    phone: 'Téléphone',
+    updated: 'Mis à jour',
+    bmi: 'IMC',
+    prescribedBy: 'Prescrit par',
+    selfAdministered: 'Auto-administré',
+    labResults: 'Résultats de Laboratoire',
+    vaccination: 'Vaccination',
+    prescription: 'Prescription',
+    routineConsultation: 'Consultation de routine',
+    labResultsUpload: 'Téléchargement des résultats de laboratoire',
+    addMedicalRecord: 'Ajouter un Dossier Médical',
+    controlWhoCanAccess: 'Contrôlez qui peut accéder à vos informations de santé',
+    accessor: 'Accès',
+    purpose: 'Objectif',
+    dataAccessed: 'Données Accédées',
+    active: 'actif',
+    download: 'Télécharger',
+    share: 'Partager',
+    overview: 'Aperçu',
+    records: 'Dossiers',
+    sharing: 'Partage',
+    quickAccessQR: 'Code QR pour accès rapide',
   },
 };
 
