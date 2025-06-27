@@ -30,6 +30,8 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
+  const { isHydrated } = useSettingsStore();
+
   useEffect(() => {
     if (error) {
       console.error("Font loading error:", error);
@@ -42,7 +44,7 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
+  if (!loaded || !isHydrated) {
     return null;
   }
 
@@ -58,12 +60,8 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const { settings, isHydrated } = useSettingsStore();
+  const { settings } = useSettingsStore();
   const themeColors = getColors(settings.darkMode);
-
-  if (!isHydrated) {
-    return null;
-  }
 
   return (
     <>
