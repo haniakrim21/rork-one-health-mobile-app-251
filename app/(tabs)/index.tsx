@@ -50,7 +50,7 @@ export default function HomeScreen() {
         <Text style={styles.sectionTitle}>{t('todaysGoals')}</Text>
         {todaysGoals.map((goal, index) => (
           <View key={index} style={styles.goalItem}>
-            <Text>{goal.title}</Text>
+            <Text>{goal.name}</Text>
           </View>
         ))}
       </View>
@@ -63,7 +63,7 @@ export default function HomeScreen() {
             style={styles.workoutItem}
             onPress={() => router.push(`/workout-details?id=${workout.id}`)}
           >
-            <Text>{workout.title}</Text>
+            <Text>{workout.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -103,13 +103,13 @@ const styles = StyleSheet.create({
   },
   goalItem: {
     padding: 12,
-    backgroundColor: colors.card,
+    backgroundColor: colors.cardBackground,
     borderRadius: 8,
     marginBottom: 8,
   },
   workoutItem: {
     padding: 12,
-    backgroundColor: colors.card,
+    backgroundColor: colors.cardBackground,
     borderRadius: 8,
     marginBottom: 8,
   },
