@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, I18nManager } from 'react-native';
 
 export type Language = 'English' | 'Arabic';
 
