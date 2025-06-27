@@ -194,7 +194,6 @@ const translations: Record<Language, Translation> = {
     female: 'Female',
     preferNotToSay: 'Prefer not to say',
     height: 'Height',
-    weight: 'Weight',
     enterYourHeight: 'Enter your height',
     enterYourWeight: 'Enter your weight',
     uploadMedicalReports: 'Upload Medical Reports',
@@ -283,7 +282,7 @@ const translations: Record<Language, Translation> = {
     basicInformation: 'Basic Information',
     accurateRecommendations: 'For more accurate recommendations',
     upcoming: 'Upcoming',
-    workoutSession: 'Workout Session',
+    workoutSession: 'Workout Session'
   },
   Arabic: {
     // App Navigation
@@ -471,7 +470,6 @@ const translations: Record<Language, Translation> = {
     female: 'أنثى',
     preferNotToSay: 'أفضل عدم التحديد',
     height: 'الطول',
-    weight: 'الوزن',
     enterYourHeight: 'أدخل طولك',
     enterYourWeight: 'أدخل وزنك',
     uploadMedicalReports: 'تحميل التقارير الطبية',
@@ -560,7 +558,7 @@ const translations: Record<Language, Translation> = {
     basicInformation: 'المعلومات الأساسية',
     accurateRecommendations: 'للحصول على توصيات أكثر دقة',
     upcoming: 'القادم',
-    workoutSession: 'جلسة تمرين',
+    workoutSession: 'جلسة تمرين'
   }
 };
 
