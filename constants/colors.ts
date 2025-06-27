@@ -1,59 +1,59 @@
 export const colors = {
   // Base colors - Modern dark theme
-  background: '#0F0F0F',
-  cardBackground: '#1C1C1E',
-  surfaceElevated: '#2C2C2E',
+  background: '#0F1117',
+  cardBackground: '#1A1D25',
+  surfaceElevated: '#2A2D35',
   text: '#FFFFFF',
-  textSecondary: '#8E8E93',
-  textTertiary: '#636366',
-  border: '#38383A',
-  borderLight: '#48484A',
+  textSecondary: '#94A3B8',
+  textTertiary: '#64748B',
+  border: '#2A2D35',
+  borderLight: '#374151',
   
-  // Primary colors - Modern teal/mint system
-  primary: '#30D158',
-  primaryDark: '#28C946',
-  primaryLight: '#40E168',
-  secondary: '#007AFF',
+  // Primary colors - One Health brand system
+  primary: '#0D9488', // Teal green
+  primaryDark: '#0B7C71',
+  primaryLight: '#14B8A6',
+  secondary: '#64748B', // Cool gray
   
   // Brand colors
-  logoTeal: '#30D158',
+  logoTeal: '#0D9488',
   
-  // Status colors - iOS inspired
-  success: '#30D158',
-  warning: '#FF9F0A',
-  error: '#FF453A',
-  info: '#64D2FF',
+  // Status colors
+  success: '#10B981',
+  warning: '#F59E0B',
+  error: '#EF4444',
+  info: '#3B82F6',
   
-  // Health category colors - More sophisticated
-  health: '#FF6482',
-  wellness: '#5AC8FA',
-  fitness: '#30D158',
-  nutrition: '#FFD60A',
+  // Health category colors
+  health: '#0D9488', // Teal for health
+  wellness: '#8B5CF6',
+  fitness: '#10B981',
+  nutrition: '#F59E0B',
   
   // Mood colors
-  excellent: '#30D158',
-  good: '#32D74B',
-  okay: '#FF9F0A',
-  low: '#FF6961',
-  terrible: '#FF453A',
+  excellent: '#10B981',
+  good: '#34D399',
+  okay: '#F59E0B',
+  low: '#F87171',
+  terrible: '#EF4444',
   
   // Neutral colors
   black: '#000000',
   white: '#FFFFFF',
-  gray: '#8E8E93',
-  lightGray: '#F2F2F7',
+  gray: '#64748B',
+  lightGray: '#F1F5F9',
   
-  // Accent colors - Modern palette
-  accent1: '#FF6482',
-  accent2: '#5AC8FA',
-  accent3: '#FFD60A',
-  accent4: '#BF5AF2',
+  // Accent colors
+  accent1: '#F472B6',
+  accent2: '#60A5FA',
+  accent3: '#FBBF24',
+  accent4: '#A78BFA',
   
   // Gradients
-  gradientPrimary: ['#30D158', '#32D74B'],
-  gradientSecondary: ['#007AFF', '#5AC8FA'],
-  gradientHealth: ['#FF6482', '#FF8A9B'],
-  gradientWellness: ['#5AC8FA', '#64D2FF'],
+  gradientPrimary: ['#0D9488', '#14B8A6'],
+  gradientSecondary: ['#64748B', '#94A3B8'],
+  gradientHealth: ['#0D9488', '#14B8A6'],
+  gradientWellness: ['#8B5CF6', '#A78BFA'],
   
   // Shadows and overlays
   shadow: 'rgba(0, 0, 0, 0.3)',
@@ -64,59 +64,59 @@ export const colors = {
 // Light theme colors
 export const lightColors = {
   background: '#FFFFFF',
-  cardBackground: '#F2F2F7',
+  cardBackground: '#F8FAFC',
   surfaceElevated: '#FFFFFF',
-  text: '#000000',
-  textSecondary: '#6D6D70',
-  textTertiary: '#8E8E93',
-  border: '#C6C6C8',
-  borderLight: '#E5E5EA',
+  text: '#0F172A',
+  textSecondary: '#475569',
+  textTertiary: '#64748B',
+  border: '#E2E8F0',
+  borderLight: '#F1F5F9',
   
-  // Keep the same primary colors for consistency
-  primary: '#30D158',
-  primaryDark: '#28C946',
-  primaryLight: '#40E168',
-  secondary: '#007AFF',
+  // Primary colors
+  primary: '#0D9488',
+  primaryDark: '#0B7C71',
+  primaryLight: '#14B8A6',
+  secondary: '#64748B',
   
   // Brand colors
-  logoTeal: '#30D158',
+  logoTeal: '#0D9488',
   
   // Status colors
-  success: '#30D158',
-  warning: '#FF9F0A',
-  error: '#FF453A',
-  info: '#007AFF',
+  success: '#10B981',
+  warning: '#F59E0B',
+  error: '#EF4444',
+  info: '#3B82F6',
   
   // Health category colors
-  health: '#FF6482',
-  wellness: '#007AFF',
-  fitness: '#30D158',
-  nutrition: '#FF9F0A',
+  health: '#0D9488',
+  wellness: '#8B5CF6',
+  fitness: '#10B981',
+  nutrition: '#F59E0B',
   
   // Mood colors
-  excellent: '#30D158',
-  good: '#32D74B',
-  okay: '#FF9F0A',
-  low: '#FF6961',
-  terrible: '#FF453A',
+  excellent: '#10B981',
+  good: '#34D399',
+  okay: '#F59E0B',
+  low: '#F87171',
+  terrible: '#EF4444',
   
   // Neutral colors
   black: '#000000',
   white: '#FFFFFF',
-  gray: '#8E8E93',
-  lightGray: '#F2F2F7',
+  gray: '#64748B',
+  lightGray: '#F1F5F9',
   
   // Accent colors
-  accent1: '#FF6482',
-  accent2: '#007AFF',
-  accent3: '#FF9F0A',
-  accent4: '#BF5AF2',
+  accent1: '#F472B6',
+  accent2: '#60A5FA',
+  accent3: '#FBBF24',
+  accent4: '#A78BFA',
   
   // Gradients
-  gradientPrimary: ['#30D158', '#32D74B'],
-  gradientSecondary: ['#007AFF', '#5AC8FA'],
-  gradientHealth: ['#FF6482', '#FF8A9B'],
-  gradientWellness: ['#007AFF', '#64D2FF'],
+  gradientPrimary: ['#0D9488', '#14B8A6'],
+  gradientSecondary: ['#64748B', '#94A3B8'],
+  gradientHealth: ['#0D9488', '#14B8A6'],
+  gradientWellness: ['#8B5CF6', '#A78BFA'],
   
   // Shadows and overlays
   shadow: 'rgba(0, 0, 0, 0.1)',

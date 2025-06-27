@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { colors } from '@/constants/colors';
 
 interface LogoProps {
   size?: 'small' | 'medium' | 'large';
@@ -11,7 +12,7 @@ interface LogoProps {
 export function Logo({ 
   size = 'medium', 
   showText = true, 
-  color = '#0D9488',
+  color = colors.logoTeal,
   variant = 'horizontal' 
 }: LogoProps) {
   const getTextSizes = () => {
@@ -32,8 +33,7 @@ export function Logo({
   if (!showText) {
     return (
       <View style={styles.iconOnly}>
-        <Text style={[styles.oneTextIcon, { fontSize: textSizes.one, color: '#9CA3AF' }]}>o</Text>
-        <View style={[styles.arrow, { borderLeftColor: color }]} />
+        <View style={[styles.triangle, { borderBottomColor: color }]} />
       </View>
     );
   }
@@ -46,9 +46,9 @@ export function Logo({
       <View style={styles.logoContainer}>
         <View style={styles.oneContainer}>
           <Text style={[styles.oneText, { fontSize: textSizes.one }]}>one</Text>
-          <View style={[styles.arrow, { borderLeftColor: color }]} />
+          <View style={[styles.triangle, { borderBottomColor: color }]} />
         </View>
-        <Text style={[styles.healthText, { fontSize: textSizes.health, color: color }]}>
+        <Text style={[styles.healthText, { fontSize: textSizes.health, color }]}>
           HEALTH
         </Text>
       </View>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   oneText: {
     fontWeight: '400',
-    color: '#9CA3AF',
+    color: colors.textSecondary,
     letterSpacing: -1,
     textTransform: 'lowercase',
   },
@@ -83,25 +83,23 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     marginTop: -2,
   },
-  arrow: {
+  triangle: {
     width: 0,
     height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
     borderLeftWidth: 8,
-    borderRightWidth: 0,
-    borderTopWidth: 6,
-    borderBottomWidth: 6,
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    marginLeft: 2,
-    marginTop: -2,
+    borderRightWidth: 8,
+    borderBottomWidth: 12,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    marginLeft: 4,
+    transform: [{ rotate: '90deg' }],
   },
   iconOnly: {
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  oneTextIcon: {
-    fontWeight: '400',
-    letterSpacing: -1,
+    width: 32,
+    height: 32,
   },
 });
