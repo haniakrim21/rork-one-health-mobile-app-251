@@ -5,7 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { colors, getColors } from "@/constants/colors";
+import { getColors } from "@/constants/colors";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { trpc, trpcClient } from "@/lib/trpc";
 import { useSettingsStore } from "@/store/settings-store";
@@ -14,15 +14,13 @@ export const unstable_settings = {
   initialRouteName: "index",
 };
 
-// Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
-// Initialize QueryClient outside of component to ensure single instance
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
     },
   },
 });
@@ -63,7 +61,6 @@ function RootLayoutNav() {
   const { settings, isHydrated } = useSettingsStore();
   const themeColors = getColors(settings.darkMode);
 
-  // Show a loading screen while settings are being rehydrated
   if (!isHydrated) {
     return null;
   }
