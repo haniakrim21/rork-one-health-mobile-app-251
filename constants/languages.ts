@@ -1,4 +1,5 @@
-import { Platform, I18nManager } from 'react-native';
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type Language = 'English' | 'Arabic';
 
@@ -245,7 +246,6 @@ const translations: Record<Language, Translation> = {
     healthImprovement: 'Health Improvement',
     weightManagement: 'Weight Management',
     stressRelief: 'Stress Relief',
-    betterSleepOption: 'Better Sleep',
     increasedEnergy: 'Increased Energy',
     socialConnection: 'Social Connection',
     diseasePrevention: 'Disease Prevention',
@@ -300,7 +300,6 @@ const translations: Record<Language, Translation> = {
     offlineMode: 'Offline Mode',
     highQualityImages: 'High Quality Images',
     backgroundRefresh: 'Background Refresh',
-    advanced: 'Advanced',
     betaFeatures: 'Beta Features',
     clearCache: 'Clear Cache',
     resetSettings: 'Reset Settings',
@@ -558,7 +557,6 @@ const translations: Record<Language, Translation> = {
     healthImprovement: 'تحسين الصحة',
     weightManagement: 'إدارة الوزن',
     stressRelief: 'تخفيف التوتر',
-    betterSleepOption: 'نوم أفضل',
     increasedEnergy: 'زيادة الطاقة',
     socialConnection: 'التواصل الاجتماعي',
     diseasePrevention: 'الوقاية من الأمراض',
@@ -613,7 +611,6 @@ const translations: Record<Language, Translation> = {
     offlineMode: 'وضع عدم الاتصال',
     highQualityImages: 'صور عالية الجودة',
     backgroundRefresh: 'تحديث في الخلفية',
-    advanced: 'متقدم',
     betaFeatures: 'ميزات تجريبية',
     clearCache: 'مسح الذاكرة المؤقتة',
     resetSettings: 'إعادة تعيين الإعدادات',
@@ -665,11 +662,21 @@ export const configureLayoutDirection = (language: string): void => {
   if (Platform.OS !== 'web') {
     const isRTLLanguage = isRTL(language);
     if (isRTLLanguage) {
-      I18nManager.allowRTL(true);
-      I18nManager.forceRTL(true);
+      try {
+        const RNI18nManager = require('react-native').I18nManager;
+        RNI18nManager.allowRTL(true);
+        RNI18nManager.forceRTL(true);
+      } catch (error) {
+        console.error('Failed to configure RTL:', error);
+      }
     } else {
-      I18nManager.allowRTL(false);
-      I18nManager.forceRTL(false);
+      try {
+        const RNI18nManager = require('react-native').I18nManager;
+        RNI18nManager.allowRTL(false);
+        RNI18nManager.forceRTL(false);
+      } catch (error) {
+        console.error('Failed to configure LTR:', error);
+      }
     }
   }
 };
