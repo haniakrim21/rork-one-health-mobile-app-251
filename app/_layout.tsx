@@ -2,7 +2,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { getColors } from "@/constants/colors";
@@ -22,6 +22,7 @@ export default function RootLayout() {
   });
 
   const { isHydrated } = useSettingsStore();
+  const [isReady, setIsReady] = useState(false);
 
   // Memoize QueryClient to prevent re-renders
   const queryClient = useMemo(() => new QueryClient({
@@ -29,6 +30,8 @@ export default function RootLayout() {
       queries: {
         retry: 1,
         staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
       },
     },
   }), []);
@@ -38,12 +41,14 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync().catch(console.error);
+    if (loaded && isHydrated && !isReady) {
+      SplashScreen.hideAsync()
+        .then(() => setIsReady(true))
+        .catch(console.error);
     }
-  }, [loaded]);
+  }, [loaded, isHydrated, isReady]);
 
-  if (!loaded || !isHydrated) {
+  if (!loaded || !isHydrated || !isReady) {
     return null;
   }
 
@@ -60,7 +65,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const { settings } = useSettingsStore();
-  const themeColors = getColors(settings.darkMode);
+  const themeColors = useMemo(() => getColors(settings.darkMode), [settings.darkMode]);
 
   return (
     <>

@@ -14,20 +14,6 @@ export const trpcClient = createTRPCClient<AppRouter>({
         ? "http://localhost:3000/api/trpc" 
         : `${process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000"}/api/trpc`,
       transformer: superjson,
-      async fetch(input: RequestInfo | URL, init?: RequestInit) {
-        try {
-          const response = await fetch(input, init);
-          return Promise.resolve(response);
-        } catch (error) {
-          console.warn('tRPC fetch error:', error);
-          return Promise.resolve(
-            new Response(JSON.stringify({ error: 'Network error' }), {
-              status: 500,
-              headers: { 'Content-Type': 'application/json' },
-            })
-          );
-        }
-      },
     }),
   ],
 });

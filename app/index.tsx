@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useUserStore } from '@/store/user-store';
@@ -7,9 +7,13 @@ import { Logo } from '@/components/Logo';
 
 export default function IndexScreen() {
   const { user } = useUserStore();
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
+    if (isNavigating) return;
+
     const timer = setTimeout(() => {
+      setIsNavigating(true);
       try {
         if (user) {
           if (user.completedOnboarding) {
@@ -22,13 +26,12 @@ export default function IndexScreen() {
         }
       } catch (error) {
         console.error('Navigation error:', error);
-        // Fallback to login if there's an error
         router.replace('/(auth)/login');
       }
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [user]);
+  }, [user, isNavigating]);
 
   return (
     <View style={styles.container}>
