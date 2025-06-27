@@ -72,6 +72,11 @@ export default function RootLayout() {
     return null;
   }
 
+  // Ensure both clients are initialized before rendering
+  if (!queryClient || !trpcClient) {
+    return null;
+  }
+
   return (
     <ErrorBoundary>
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
