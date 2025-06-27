@@ -9,6 +9,7 @@ import { useWellnessStore } from '@/store/wellness-store';
 import { useSettingsStore } from '@/store/settings-store';
 import { getTranslation, isRTL } from '@/constants/languages';
 import type { PersonalizedGoal } from '@/types';
+import { WorkoutCard } from '@/components/WorkoutCard';
 
 export default function HomeScreen() {
   const { user } = useUserStore();
@@ -58,13 +59,12 @@ export default function HomeScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{t('upcomingWorkouts')}</Text>
         {upcomingWorkouts.map((workout, index) => (
-          <TouchableOpacity 
+          <WorkoutCard
             key={index}
-            style={styles.workoutItem}
+            workout={workout}
             onPress={() => router.push(`/workout-details?id=${workout.id}`)}
-          >
-            <Text>{workout.name}</Text>
-          </TouchableOpacity>
+            onStart={() => router.push(`/fitness-session/${workout.id}`)}
+          />
         ))}
       </View>
     </ScrollView>
@@ -102,12 +102,6 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   goalItem: {
-    padding: 12,
-    backgroundColor: colors.cardBackground,
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  workoutItem: {
     padding: 12,
     backgroundColor: colors.cardBackground,
     borderRadius: 8,
