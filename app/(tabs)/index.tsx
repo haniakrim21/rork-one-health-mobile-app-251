@@ -8,8 +8,7 @@ import { useFitnessStore } from '@/store/fitness-store';
 import { useWellnessStore } from '@/store/wellness-store';
 import { useSettingsStore } from '@/store/settings-store';
 import { getTranslation, isRTL } from '@/constants/languages';
-
-// ... rest of the imports ...
+import type { PersonalizedGoal } from '@/types';
 
 export default function HomeScreen() {
   const { user } = useUserStore();
@@ -21,7 +20,6 @@ export default function HomeScreen() {
   const t = useCallback((key: string) => getTranslation(settings.language, key), [settings.language]);
   const isRTLLayout = useMemo(() => isRTL(settings.language), [settings.language]);
   
-  // Set RTL layout once when language changes
   React.useEffect(() => {
     I18nManager.allowRTL(true);
     I18nManager.forceRTL(isRTLLayout);
@@ -39,11 +37,80 @@ export default function HomeScreen() {
     [workouts]
   );
 
-  // ... rest of the component code remains the same ...
-  
   return (
-    // ... existing JSX ...
+    <ScrollView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.greeting}>{t('greeting')}</Text>
+        <TouchableOpacity onPress={() => router.push('/profile')}>
+          <Text style={styles.profileLink}>{t('viewProfile')}</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>{t('todaysGoals')}</Text>
+        {todaysGoals.map((goal, index) => (
+          <View key={index} style={styles.goalItem}>
+            <Text>{goal.title}</Text>
+          </View>
+        ))}
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>{t('upcomingWorkouts')}</Text>
+        {upcomingWorkouts.map((workout, index) => (
+          <TouchableOpacity 
+            key={index}
+            style={styles.workoutItem}
+            onPress={() => router.push(`/workout-details?id=${workout.id}`)}
+          >
+            <Text>{workout.title}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
-// ... styles remain the same ...
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  greeting: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  profileLink: {
+    color: colors.primary,
+    fontSize: 16,
+  },
+  section: {
+    padding: 16,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+    color: colors.text,
+  },
+  goalItem: {
+    padding: 12,
+    backgroundColor: colors.card,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  workoutItem: {
+    padding: 12,
+    backgroundColor: colors.card,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+});
