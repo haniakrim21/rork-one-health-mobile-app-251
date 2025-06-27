@@ -7,7 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { colors, getColors } from "@/constants/colors";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { trpc } from "@/lib/trpc";
+import { trpc, trpcClient } from "@/lib/trpc";
 import { useSettingsStore } from "@/store/settings-store";
 
 export const unstable_settings = {
@@ -25,28 +25,6 @@ const queryClient = new QueryClient({
       staleTime: 5 * 60 * 1000, // 5 minutes
     },
   },
-});
-
-// Initialize tRPC client outside of component
-const trpcClient = trpc.createClient({
-  links: [
-    httpBatchLink({
-      url: __DEV__ ? "http://localhost:3000/api/trpc" : `${process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000"}/api/trpc`,
-      transformer: superjson,
-      fetch: async (url, options) => {
-        try {
-          const response = await fetch(url, options);
-          return response;
-        } catch (error) {
-          console.warn('tRPC fetch error:', error);
-          return new Response(JSON.stringify({ error: 'Network error' }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-          });
-        }
-      },
-    }),
-  ],
 });
 
 export default function RootLayout() {
