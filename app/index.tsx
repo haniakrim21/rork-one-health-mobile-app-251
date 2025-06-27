@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useUserStore } from '@/store/user-store';
@@ -7,31 +7,27 @@ import { Logo } from '@/components/Logo';
 
 export default function IndexScreen() {
   const { user } = useUserStore();
-  const [isNavigating, setIsNavigating] = useState(false);
+  const navigationAttempted = useRef(false);
+
+  const navigate = useCallback(() => {
+    if (user) {
+      if (user.completedOnboarding) {
+        router.replace('/(tabs)');
+      } else {
+        router.replace('/onboarding');
+      }
+    } else {
+      router.replace('/(auth)/login');
+    }
+  }, [user]);
 
   useEffect(() => {
-    if (isNavigating) return;
+    if (navigationAttempted.current) return;
+    navigationAttempted.current = true;
 
-    const timer = setTimeout(() => {
-      setIsNavigating(true);
-      try {
-        if (user) {
-          if (user.completedOnboarding) {
-            router.replace('/(tabs)');
-          } else {
-            router.replace('/onboarding');
-          }
-        } else {
-          router.replace('/(auth)/login');
-        }
-      } catch (error) {
-        console.error('Navigation error:', error);
-        router.replace('/(auth)/login');
-      }
-    }, 2000);
-
+    const timer = setTimeout(navigate, 2000);
     return () => clearTimeout(timer);
-  }, [user, isNavigating]);
+  }, [navigate]);
 
   return (
     <View style={styles.container}>

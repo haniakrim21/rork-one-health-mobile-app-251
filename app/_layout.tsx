@@ -2,7 +2,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { getColors } from "@/constants/colors";
@@ -22,7 +22,6 @@ export default function RootLayout() {
   });
 
   const { isHydrated } = useSettingsStore();
-  const [isReady, setIsReady] = useState(false);
 
   // Memoize QueryClient to prevent re-renders
   const queryClient = useMemo(() => new QueryClient({
@@ -36,19 +35,14 @@ export default function RootLayout() {
     },
   }), []);
 
-  useEffect(() => {
+  const onLayoutRootView = useCallback(async () => {
     if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    if (loaded && isHydrated && !isReady) {
-      SplashScreen.hideAsync()
-        .then(() => setIsReady(true))
-        .catch(console.error);
+    if (loaded && isHydrated) {
+      await SplashScreen.hideAsync();
     }
-  }, [loaded, isHydrated, isReady]);
+  }, [loaded, isHydrated, error]);
 
-  if (!loaded || !isHydrated || !isReady) {
+  if (!loaded || !isHydrated) {
     return null;
   }
 
@@ -56,14 +50,14 @@ export default function RootLayout() {
     <ErrorBoundary>
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <RootLayoutNav />
+          <RootLayoutNav onLayout={onLayoutRootView} />
         </QueryClientProvider>
       </trpc.Provider>
     </ErrorBoundary>
   );
 }
 
-function RootLayoutNav() {
+function RootLayoutNav({ onLayout }: { onLayout: () => Promise<void> }) {
   const { settings } = useSettingsStore();
   const themeColors = useMemo(() => getColors(settings.darkMode), [settings.darkMode]);
 
@@ -86,6 +80,7 @@ function RootLayoutNav() {
           },
           headerTintColor: themeColors.text,
         }}
+        onLayout={onLayout}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
