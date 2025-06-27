@@ -7,7 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { colors, getColors } from "@/constants/colors";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { trpc, trpcClient } from "@/lib/trpc";
+import { trpc } from "@/lib/trpc";
 import { useSettingsStore } from "@/store/settings-store";
 import superjson from "superjson";
 import { httpBatchLink } from "@trpc/client";
@@ -32,7 +32,7 @@ export default function RootLayout() {
     },
   }));
 
-  const [trpcQueryClient] = useState(() =>
+  const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
         httpBatchLink({
@@ -74,7 +74,7 @@ export default function RootLayout() {
 
   return (
     <ErrorBoundary>
-      <trpc.Provider client={trpcQueryClient} queryClient={queryClient}>
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           <RootLayoutNav />
         </QueryClientProvider>
