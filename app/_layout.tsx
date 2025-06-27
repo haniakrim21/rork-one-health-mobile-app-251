@@ -2,7 +2,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { getColors } from "@/constants/colors";
@@ -16,15 +16,6 @@ export const unstable_settings = {
 
 SplashScreen.preventAutoHideAsync();
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      staleTime: 5 * 60 * 1000,
-    },
-  },
-});
-
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     ...FontAwesome.font,
@@ -32,15 +23,23 @@ export default function RootLayout() {
 
   const { isHydrated } = useSettingsStore();
 
+  // Memoize QueryClient to prevent re-renders
+  const queryClient = useMemo(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1,
+        staleTime: 5 * 60 * 1000,
+      },
+    },
+  }), []);
+
   useEffect(() => {
-    if (error) {
-      console.error("Font loading error:", error);
-    }
+    if (error) throw error;
   }, [error]);
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync().catch(console.error);
     }
   }, [loaded]);
 
