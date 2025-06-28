@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   oneText: {
     fontWeight: '400',
-    color: colors.textSecondary,
+    color: colors.logoGray,
     letterSpacing: -1,
     textTransform: 'lowercase',
   },

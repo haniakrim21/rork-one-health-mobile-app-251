@@ -34,6 +34,10 @@ export const colors = {
   fitness: '#5856D6',
   wellness: '#34C759',
   
+  // Logo colors
+  logoTeal: '#006B77',
+  logoGray: '#666666',
+  
   // Grayscale
   gray100: '#F8F9FA',
   gray200: '#E9ECEF',
