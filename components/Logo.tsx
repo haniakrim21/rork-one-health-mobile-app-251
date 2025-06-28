@@ -5,14 +5,12 @@ import { colors } from '@/constants/colors';
 interface LogoProps {
   size?: 'small' | 'medium' | 'large';
   showText?: boolean;
-  color?: string;
   variant?: 'horizontal' | 'vertical';
 }
 
 export function Logo({ 
   size = 'medium', 
-  showText = true, 
-  color = colors.logoTeal,
+  showText = true,
   variant = 'horizontal' 
 }: LogoProps) {
   const getTextSizes = () => {
@@ -33,7 +31,7 @@ export function Logo({
   if (!showText) {
     return (
       <View style={styles.iconOnly}>
-        <View style={[styles.triangle, { borderBottomColor: color }]} />
+        <View style={[styles.triangle, { borderBottomColor: colors.logoTeal }]} />
       </View>
     );
   }
@@ -46,9 +44,9 @@ export function Logo({
       <View style={styles.logoContainer}>
         <View style={styles.oneContainer}>
           <Text style={[styles.oneText, { fontSize: textSizes.one }]}>one</Text>
-          <View style={[styles.triangle, { borderBottomColor: color }]} />
+          <View style={[styles.triangle, { borderBottomColor: colors.logoTeal }]} />
         </View>
-        <Text style={[styles.healthText, { fontSize: textSizes.health, color }]}>
+        <Text style={[styles.healthText, { fontSize: textSizes.health, color: colors.logoTeal }]}>
           HEALTH
         </Text>
       </View>
