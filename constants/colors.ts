@@ -34,7 +34,7 @@ export const colors = {
   fitness: '#5856D6',
   wellness: '#34C759',
   
-  // Logo colors
+  // Logo colors - Updated to match brand
   logoTeal: '#006B77',
   logoGray: '#666666',
   
