@@ -1,8 +1,11 @@
 export const colors = {
   // Base colors
   background: '#FFFFFF',
+  surfaceElevated: '#FFFFFF',
   cardBackground: '#F8F9FA',
   text: '#1A1A1A',
+  textSecondary: '#6C757D',
+  textTertiary: '#ADB5BD',
   
   // Primary colors
   primary: '#007AFF',
@@ -25,6 +28,11 @@ export const colors = {
   error: '#FF3B30',
   info: '#5856D6',
   
+  // Domain-specific colors
+  health: '#FF2D55',
+  fitness: '#5856D6',
+  wellness: '#34C759',
+  
   // Grayscale
   gray100: '#F8F9FA',
   gray200: '#E9ECEF',
@@ -38,11 +46,13 @@ export const colors = {
   
   // Border colors
   border: '#E9ECEF',
+  borderLight: '#F8F9FA',
   borderDark: '#DEE2E6',
   
   // Overlay colors
   overlay: 'rgba(0, 0, 0, 0.5)',
   modalBackground: 'rgba(0, 0, 0, 0.75)',
+  shadow: '#000000',
   
   // Specific UI elements
   tabBar: '#F8F9FA',
@@ -54,9 +64,31 @@ export const colors = {
   placeholder: '#ADB5BD',
   disabled: '#E9ECEF',
   
-  // Dark mode specific (used when dark mode is enabled)
+  // Dark mode specific
   darkBackground: '#000000',
   darkCardBackground: '#1C1C1E',
   darkText: '#FFFFFF',
-  darkBorder: '#38383A'
+  darkBorder: '#38383A',
+
+  // Utility colors
+  black: '#000000',
+  white: '#FFFFFF',
+  transparent: 'transparent',
 } as const;
+
+// Theme-aware color getter
+export const getColors = (isDark: boolean) => {
+  if (isDark) {
+    return {
+      ...colors,
+      background: colors.darkBackground,
+      cardBackground: colors.darkCardBackground,
+      text: colors.darkText,
+      border: colors.darkBorder,
+      surfaceElevated: colors.darkCardBackground,
+    };
+  }
+  return colors;
+};
+
+export type Colors = typeof colors;
