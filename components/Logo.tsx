@@ -31,7 +31,7 @@ export function Logo({
   if (!showText) {
     return (
       <View style={styles.iconOnly}>
-        <View style={[styles.triangle, { borderBottomColor: colors.logoTeal }]} />
+        <View style={styles.playIcon} />
       </View>
     );
   }
@@ -41,12 +41,26 @@ export function Logo({
       styles.container,
       variant === 'vertical' && styles.containerVertical
     ]}>
-      <View style={styles.logoContainer}>
+      <View style={[
+        styles.logoContainer,
+        variant === 'vertical' && styles.logoContainerVertical
+      ]}>
         <View style={styles.oneContainer}>
-          <Text style={[styles.oneText, { fontSize: textSizes.one }]}>one</Text>
-          <View style={[styles.triangle, { borderBottomColor: colors.logoTeal }]} />
+          <Text style={[styles.oneText, { fontSize: textSizes.one }]}>
+            <Text style={styles.oText}>o</Text>
+            ne
+          </Text>
+          <View style={[
+            styles.playIcon,
+            size === 'small' && styles.playIconSmall,
+            size === 'large' && styles.playIconLarge,
+          ]} />
         </View>
-        <Text style={[styles.healthText, { fontSize: textSizes.health }]}>
+        <Text style={[
+          styles.healthText,
+          { fontSize: textSizes.health },
+          variant === 'horizontal' && styles.healthTextHorizontal
+        ]}>
           HEALTH
         </Text>
       </View>
@@ -64,41 +78,73 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
   },
+  logoContainerVertical: {
+    gap: 4,
+  },
   oneContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     position: 'relative',
   },
   oneText: {
-    fontWeight: '300',
+    fontWeight: '400',
     color: colors.logoGray,
-    letterSpacing: -0.5,
-    textTransform: 'lowercase',
+    letterSpacing: -0.2,
+  },
+  oText: {
+    position: 'relative',
+    marginRight: 2,
   },
   healthText: {
     fontWeight: '700',
     color: colors.logoTeal,
-    letterSpacing: 2,
-    textTransform: 'uppercase',
-    marginTop: -2,
+    letterSpacing: 1,
   },
-  triangle: {
+  healthTextHorizontal: {
+    marginLeft: 8,
+  },
+  playIcon: {
+    position: 'absolute',
     width: 0,
     height: 0,
     backgroundColor: 'transparent',
     borderStyle: 'solid',
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderBottomWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: colors.logoTeal,
+    transform: [
+      { rotate: '90deg' },
+      { translateX: 4 },
+      { translateY: -2 }
+    ],
+  },
+  playIconSmall: {
+    borderLeftWidth: 4,
+    borderRightWidth: 4,
+    borderBottomWidth: 8,
+    transform: [
+      { rotate: '90deg' },
+      { translateX: 3 },
+      { translateY: -1 }
+    ],
+  },
+  playIconLarge: {
     borderLeftWidth: 8,
     borderRightWidth: 8,
     borderBottomWidth: 12,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    marginLeft: 4,
-    transform: [{ rotate: '90deg' }],
+    transform: [
+      { rotate: '90deg' },
+      { translateX: 5 },
+      { translateY: -3 }
+    ],
   },
   iconOnly: {
-    alignItems: 'center',
-    justifyContent: 'center',
     width: 32,
     height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
