@@ -46,7 +46,7 @@ export function Logo({
           <Text style={[styles.oneText, { fontSize: textSizes.one }]}>one</Text>
           <View style={[styles.triangle, { borderBottomColor: colors.logoTeal }]} />
         </View>
-        <Text style={[styles.healthText, { fontSize: textSizes.health, color: colors.logoTeal }]}>
+        <Text style={[styles.healthText, { fontSize: textSizes.health }]}>
           HEALTH
         </Text>
       </View>
@@ -70,13 +70,14 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   oneText: {
-    fontWeight: '400',
+    fontWeight: '300',
     color: colors.logoGray,
-    letterSpacing: -1,
+    letterSpacing: -0.5,
     textTransform: 'lowercase',
   },
   healthText: {
     fontWeight: '700',
+    color: colors.logoTeal,
     letterSpacing: 2,
     textTransform: 'uppercase',
     marginTop: -2,
