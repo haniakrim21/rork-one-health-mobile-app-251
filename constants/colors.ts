@@ -1,3 +1,4 @@
+// First export the colors object
 export const colors = {
   // Base colors
   background: '#FFFFFF',
@@ -76,7 +77,7 @@ export const colors = {
   transparent: 'transparent',
 } as const;
 
-// Theme-aware color getter
+// Then export the theme-aware color getter
 export const getColors = (isDark: boolean) => {
   if (isDark) {
     return {
