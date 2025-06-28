@@ -1,53 +1,130 @@
 export const colors = {
-  // Brand Colors
-  primary: '#006B77',
-  secondary: '#4A90E2',
+  // Base colors - Modern dark theme
+  background: '#0F1117',
+  cardBackground: '#1A1D25',
+  surfaceElevated: '#2A2D35',
+  text: '#FFFFFF',
+  textSecondary: '#94A3B8',
+  textTertiary: '#64748B',
+  border: '#2A2D35',
+  borderLight: '#374151',
   
-  // Status Colors
-  success: '#34C759',
-  warning: '#FF9500',
-  error: '#FF3B30',
-  info: '#5856D6',
-
-  // Health Colors
-  health: '#FF2D55',
-  wellness: '#5856D6',
-  fitness: '#AF52DE',
-
-  // Logo Colors
-  logoGray: '#666666',
-  logoTeal: '#006B77',
-
-  // Light Theme Colors
-  light: {
-    text: '#000000',
-    textSecondary: '#666666',
-    background: '#FFFFFF',
-    cardBackground: '#FFFFFF',
-    border: '#E5E5EA',
-  },
-
-  // Dark Theme Colors
-  dark: {
-    text: '#FFFFFF',
-    textSecondary: '#AEAEB2',
-    background: '#000000',
-    cardBackground: '#1C1C1E',
-    border: '#38383A',
-  },
-} as const;
-
-export type Colors = typeof colors;
-
-export const getColors = (isDarkMode: boolean) => {
-  const themeColors = isDarkMode ? colors.dark : colors.light;
+  // Primary colors - One Health brand system
+  primary: '#0D9488', // Teal green
+  primaryDark: '#0B7C71',
+  primaryLight: '#14B8A6',
+  secondary: '#64748B', // Cool gray
   
-  return {
-    ...colors,
-    text: themeColors.text,
-    textSecondary: themeColors.textSecondary,
-    background: themeColors.background,
-    cardBackground: themeColors.cardBackground,
-    border: themeColors.border,
-  };
+  // Brand colors
+  logoTeal: '#0D9488',
+  
+  // Status colors
+  success: '#10B981',
+  warning: '#F59E0B',
+  error: '#EF4444',
+  info: '#3B82F6',
+  
+  // Health category colors
+  health: '#0D9488', // Teal for health
+  wellness: '#8B5CF6',
+  fitness: '#10B981',
+  nutrition: '#F59E0B',
+  
+  // Mood colors
+  excellent: '#10B981',
+  good: '#34D399',
+  okay: '#F59E0B',
+  low: '#F87171',
+  terrible: '#EF4444',
+  
+  // Neutral colors
+  black: '#000000',
+  white: '#FFFFFF',
+  gray: '#64748B',
+  lightGray: '#F1F5F9',
+  
+  // Accent colors
+  accent1: '#F472B6',
+  accent2: '#60A5FA',
+  accent3: '#FBBF24',
+  accent4: '#A78BFA',
+  
+  // Gradients
+  gradientPrimary: ['#0D9488', '#14B8A6'],
+  gradientSecondary: ['#64748B', '#94A3B8'],
+  gradientHealth: ['#0D9488', '#14B8A6'],
+  gradientWellness: ['#8B5CF6', '#A78BFA'],
+  
+  // Shadows and overlays
+  shadow: 'rgba(0, 0, 0, 0.3)',
+  overlay: 'rgba(0, 0, 0, 0.6)',
+  backdrop: 'rgba(0, 0, 0, 0.8)',
+};
+
+// Light theme colors
+export const lightColors = {
+  background: '#FFFFFF',
+  cardBackground: '#F8FAFC',
+  surfaceElevated: '#FFFFFF',
+  text: '#0F172A',
+  textSecondary: '#475569',
+  textTertiary: '#64748B',
+  border: '#E2E8F0',
+  borderLight: '#F1F5F9',
+  
+  // Primary colors
+  primary: '#0D9488',
+  primaryDark: '#0B7C71',
+  primaryLight: '#14B8A6',
+  secondary: '#64748B',
+  
+  // Brand colors
+  logoTeal: '#0D9488',
+  
+  // Status colors
+  success: '#10B981',
+  warning: '#F59E0B',
+  error: '#EF4444',
+  info: '#3B82F6',
+  
+  // Health category colors
+  health: '#0D9488',
+  wellness: '#8B5CF6',
+  fitness: '#10B981',
+  nutrition: '#F59E0B',
+  
+  // Mood colors
+  excellent: '#10B981',
+  good: '#34D399',
+  okay: '#F59E0B',
+  low: '#F87171',
+  terrible: '#EF4444',
+  
+  // Neutral colors
+  black: '#000000',
+  white: '#FFFFFF',
+  gray: '#64748B',
+  lightGray: '#F1F5F9',
+  
+  // Accent colors
+  accent1: '#F472B6',
+  accent2: '#60A5FA',
+  accent3: '#FBBF24',
+  accent4: '#A78BFA',
+  
+  // Gradients
+  gradientPrimary: ['#0D9488', '#14B8A6'],
+  gradientSecondary: ['#64748B', '#94A3B8'],
+  gradientHealth: ['#0D9488', '#14B8A6'],
+  gradientWellness: ['#8B5CF6', '#A78BFA'],
+  
+  // Shadows and overlays
+  shadow: 'rgba(0, 0, 0, 0.1)',
+  overlay: 'rgba(0, 0, 0, 0.3)',
+  backdrop: 'rgba(0, 0, 0, 0.5)',
+};
+
+// Function to get colors based on theme
+export const getColors = (isDark: boolean = true) => {
+  return isDark ? colors : lightColors;
 };
