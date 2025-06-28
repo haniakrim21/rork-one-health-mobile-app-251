@@ -59,4 +59,4 @@ export const colors = {
   darkCardBackground: '#1C1C1E',
   darkText: '#FFFFFF',
   darkBorder: '#38383A'
-};
+} as const;
