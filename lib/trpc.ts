@@ -14,7 +14,9 @@ export const trpcClient = createTRPCClient<AppRouter>({
         ? "http://localhost:3000/api/trpc" 
         : `${process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000"}/api/trpc`,
       transformer: superjson,
-      fetch: (input, init) => fetch(input, { ...init, credentials: 'include' }),
+      fetch: (input, init) => {
+        return fetch(input as RequestInfo, { ...init, credentials: 'include' });
+      },
     }),
   ],
 });

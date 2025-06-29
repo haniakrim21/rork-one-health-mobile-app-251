@@ -39,7 +39,7 @@ interface SettingsState {
 
 const defaultSettings: AppSettings = {
   darkMode: true,
-  language: 'Arabic', // Changed default to Arabic
+  language: 'Arabic',
   units: 'metric',
   soundEffects: true,
   hapticFeedback: true,
@@ -65,31 +65,20 @@ export const useSettingsStore = create<SettingsState>()(
       },
       
       updateSetting: (key, value) => {
-        console.log(`Updating setting ${String(key)} from ${get().settings[key]} to:`, value);
         set((state) => ({
           settings: {
             ...state.settings,
             [key]: value,
           },
         }));
-        
-        // Log the updated state after a brief delay
-        setTimeout(() => {
-          const newState = get();
-          console.log(`Setting ${String(key)} updated to:`, newState.settings[key]);
-          console.log('Full settings state:', newState.settings);
-        }, 100);
       },
       
       resetSettings: () => {
-        console.log('Resetting settings to defaults');
         set({ settings: { ...defaultSettings } });
       },
       
       clearCache: async () => {
         try {
-          // Clear any cached data here
-          console.log('Cache cleared successfully');
           return Promise.resolve();
         } catch (error) {
           console.error('Error clearing cache:', error);
@@ -104,9 +93,8 @@ export const useSettingsStore = create<SettingsState>()(
         return (state, error) => {
           if (error) {
             console.error('Settings rehydration error:', error);
-          } else if (state) {
-            console.log('Settings rehydrated:', state.settings);
-            // Mark as hydrated
+          }
+          if (state) {
             state.setHydrated(true);
           }
         };

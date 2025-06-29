@@ -361,12 +361,13 @@ export interface WorkoutExercise {
 export interface Workout {
   id: string;
   name: string;
+  title?: string; // Add title property for compatibility
   type: 'strength' | 'cardio' | 'flexibility' | 'mixed' | 'balance' | 'custom';
   exercises: WorkoutExercise[];
   duration?: number; // in minutes
   caloriesBurned?: number;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
-  createdAt: string; // Made required
+  createdAt: string;
   completedAt?: string;
   scheduledFor?: string;
   notes?: string;

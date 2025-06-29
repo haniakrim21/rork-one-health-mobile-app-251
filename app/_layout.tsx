@@ -2,7 +2,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { getColors } from "@/constants/colors";
@@ -16,24 +16,24 @@ export const unstable_settings = {
 
 SplashScreen.preventAutoHideAsync();
 
+// Create QueryClient outside component to prevent re-creation
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 5 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  },
+});
+
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     ...FontAwesome.font,
   });
 
   const { isHydrated } = useSettingsStore();
-
-  // Memoize QueryClient to prevent re-renders
-  const queryClient = useMemo(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: 1,
-        staleTime: 5 * 60 * 1000,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-      },
-    },
-  }), []);
 
   const onLayoutRootView = useCallback(async () => {
     if (error) throw error;
@@ -61,6 +61,10 @@ function RootLayoutNav({ onLayout }: { onLayout: () => Promise<void> }) {
   const { settings } = useSettingsStore();
   const themeColors = useMemo(() => getColors(settings.darkMode), [settings.darkMode]);
 
+  useEffect(() => {
+    onLayout();
+  }, [onLayout]);
+
   return (
     <>
       <StatusBar 
@@ -80,7 +84,6 @@ function RootLayoutNav({ onLayout }: { onLayout: () => Promise<void> }) {
           },
           headerTintColor: themeColors.text,
         }}
-        onLayout={onLayout}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
