@@ -146,6 +146,7 @@ export interface FitnessGoal {
 export interface FitnessGoalMilestone {
   id: string;
   title: string;
+  name: string;
   targetValue: number;
   completed: boolean;
   completedAt?: string;
@@ -155,6 +156,7 @@ export interface FitnessGoalMilestone {
 export interface Milestone {
   id: string;
   title: string;
+  name: string;
   targetValue: number;
   completed: boolean;
   completedAt?: string;
@@ -164,6 +166,7 @@ export interface Milestone {
 export interface GoalMilestone {
   id: string;
   title: string;
+  name: string;
   targetValue: number;
   completed: boolean;
   completedAt?: string;
@@ -240,6 +243,8 @@ export interface Appointment {
   type: 'checkup' | 'specialist' | 'dental' | 'mental_health' | 'virtual' | 'physical' | 'home' | 'other';
   doctorName: string;
   provider?: string;
+  specialistType?: string;
+  specialistName?: string;
   date: string;
   time: string;
   location?: string;
@@ -258,6 +263,7 @@ export interface Medication {
   startDate: string;
   endDate?: string;
   prescribedBy: string;
+  purpose?: string;
   instructions?: string;
   notes?: string;
   sideEffects?: string[];

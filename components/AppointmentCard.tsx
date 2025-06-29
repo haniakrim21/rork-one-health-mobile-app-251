@@ -48,14 +48,14 @@ export function AppointmentCard({ appointment, onPress, style }: AppointmentCard
       </View>
       
       <Text style={styles.title}>
-        {appointment.title || `${appointment.specialistType} Appointment`}
+        {appointment.title || `${appointment.type} Appointment`}
       </Text>
       
       <View style={styles.details}>
         <View style={styles.detailRow}>
           <User size={16} color={colors.textSecondary} />
           <Text style={styles.detailText}>
-            {appointment.provider || appointment.specialistName}
+            {appointment.provider || appointment.doctorName}
           </Text>
         </View>
         

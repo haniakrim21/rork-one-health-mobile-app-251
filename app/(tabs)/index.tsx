@@ -146,7 +146,7 @@ export default function HomeScreen() {
         value={currentMood ? currentMood.mood : 'Not logged'}
         type="mood"
         progress={currentEnergy ? currentEnergy.score : 0}
-        icon="activity"
+        icon="brain"
       />
 
       {/* Health Metrics */}

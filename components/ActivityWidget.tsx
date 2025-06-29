@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { LucideIcon } from 'lucide-react-native';
+import { Activity, Heart, Footprints, Flame, Clock, Brain } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 
 export interface ActivityWidgetProps {
   title: string;
   value: string;
-  type: 'steps' | 'calories' | 'distance' | 'active-time';
+  type: 'steps' | 'calories' | 'distance' | 'active-time' | 'mood';
   progress: number;
-  icon: LucideIcon;
+  icon?: 'activity' | 'heart' | 'footprints' | 'flame' | 'clock' | 'brain';
   onPress?: () => void;
 }
 
@@ -17,7 +17,7 @@ export function ActivityWidget({
   value, 
   type, 
   progress, 
-  icon: Icon,
+  icon = 'activity',
   onPress 
 }: ActivityWidgetProps) {
   const getTypeColor = () => {
@@ -30,16 +30,38 @@ export function ActivityWidget({
         return colors.info;
       case 'active-time':
         return colors.success;
+      case 'mood':
+        return colors.secondary;
       default:
         return colors.primary;
     }
   };
 
+  const getIcon = () => {
+    switch (icon) {
+      case 'heart':
+        return Heart;
+      case 'footprints':
+        return Footprints;
+      case 'flame':
+        return Flame;
+      case 'clock':
+        return Clock;
+      case 'brain':
+        return Brain;
+      case 'activity':
+      default:
+        return Activity;
+    }
+  };
+
+  const IconComponent = getIcon();
+
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.header}>
         <View style={[styles.iconContainer, { backgroundColor: getTypeColor() + '20' }]}>
-          <Icon size={20} color={getTypeColor()} />
+          <IconComponent size={20} color={getTypeColor()} />
         </View>
         <Text style={styles.title}>{title}</Text>
       </View>
@@ -69,7 +91,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.cardBackground,
     borderRadius: 16,
     padding: 16,
-    width: '48%',
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
   header: {
     flexDirection: 'row',

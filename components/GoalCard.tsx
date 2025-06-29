@@ -191,7 +191,7 @@ export function GoalCard({ goal, onPress, onEdit, onComplete, onUpdate, showActi
                   styles.milestoneText,
                   milestone.completed && styles.completedMilestoneText
                 ]}>
-                  {milestone.name}
+                  {milestone.title}
                 </Text>
               </View>
             ))}
