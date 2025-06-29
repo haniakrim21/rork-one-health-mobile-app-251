@@ -1,230 +1,258 @@
-import React, { useCallback, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, I18nManager, TextInput } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { colors } from '@/constants/colors';
-import { useUserStore } from '@/store/user-store';
+import { Card } from '@/components/Card';
+import { MetricCard } from '@/components/MetricCard';
+import { ActivityWidget } from '@/components/ActivityWidget';
+import { WorkoutCard } from '@/components/WorkoutCard';
+import { AppointmentCard } from '@/components/AppointmentCard';
+import { MedicationCard } from '@/components/MedicationCard';
+import { GoalCard } from '@/components/GoalCard';
 import { useHealthStore } from '@/store/health-store';
 import { useFitnessStore } from '@/store/fitness-store';
 import { useWellnessStore } from '@/store/wellness-store';
-import { useSettingsStore } from '@/store/settings-store';
-import { getTranslation, isRTL } from '@/constants/languages';
-import type { PersonalizedGoal } from '@/types';
-import { WorkoutCard } from '@/components/WorkoutCard';
-import { Search, Filter, Activity, Heart, Brain, Apple, User, Bell } from 'lucide-react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useUserStore } from '@/store/user-store';
+import { 
+  Heart, 
+  Activity, 
+  Target, 
+  Calendar,
+  Pill,
+  Plus,
+  TrendingUp,
+  Zap,
+  Brain
+} from 'lucide-react-native';
 
 export default function HomeScreen() {
   const { user } = useUserStore();
-  const { healthMetrics = [] } = useHealthStore();
-  const { workouts = [] } = useFitnessStore();
-  const { moodEntries = [] } = useWellnessStore();
-  const { settings } = useSettingsStore();
-  
-  const t = useCallback((key: string) => getTranslation(settings.language, key), [settings.language]);
-  const isRTLLayout = useMemo(() => isRTL(settings.language), [settings.language]);
-  
-  React.useEffect(() => {
-    I18nManager.allowRTL(true);
-    I18nManager.forceRTL(isRTLLayout);
-  }, [isRTLLayout]);
-  
-  const todaysGoals = useMemo(() => 
-    (user?.goals || [])
-      .filter((goal: PersonalizedGoal) => !goal.completed)
-      .slice(0, 3),
-    [user?.goals]
-  );
+  const { metrics, appointments, medications } = useHealthStore();
+  const { workouts, goals: fitnessGoals } = useFitnessStore();
+  const { mood, energy, goals: wellnessGoals } = useWellnessStore();
 
-  const upcomingWorkouts = useMemo(() => 
-    workouts.filter(w => !w.completed).slice(0, 2),
-    [workouts]
-  );
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    return 'Good Evening';
+  }, []);
 
-  const categories = [
-    { id: 'all', name: 'All', icon: Activity },
-    { id: 'health', name: 'Health', icon: Heart },
-    { id: 'wellness', name: 'Wellness', icon: Brain },
-    { id: 'fitness', name: 'Fitness', icon: Activity },
-    { id: 'nutrition', name: 'Nutrition', icon: Apple },
-  ];
+  const todayWorkouts = useMemo(() => {
+    const today = new Date().toDateString();
+    return workouts.filter(workout => 
+      workout.scheduledFor && new Date(workout.scheduledFor).toDateString() === today
+    );
+  }, [workouts]);
 
-  const healthPrograms = [
-    {
-      id: '1',
-      title: 'Heart Health Program',
-      instructor: 'Dr. Sarah Johnson',
-      category: 'health',
-      duration: '8 weeks',
-      sessions: 16,
-      rating: 4.8,
-      image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400',
-      color: colors.primary,
-    },
-    {
-      id: '2',
-      title: 'Mindfulness & Stress Relief',
-      instructor: 'Dr. Michael Chen',
-      category: 'wellness',
-      duration: '6 weeks',
-      sessions: 12,
-      rating: 4.9,
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
-      color: colors.wellness,
-    },
-    {
-      id: '3',
-      title: 'Strength Training Basics',
-      instructor: 'Coach Emma Wilson',
-      category: 'fitness',
-      duration: '4 weeks',
-      sessions: 8,
-      rating: 4.7,
-      image: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400',
-      color: colors.fitness,
-    },
-  ];
+  const upcomingAppointments = useMemo(() => {
+    const now = new Date();
+    return appointments
+      .filter(apt => new Date(apt.date) > now)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .slice(0, 2);
+  }, [appointments]);
+
+  const activeMedications = useMemo(() => {
+    return medications.filter(med => !med.endDate || new Date(med.endDate) > new Date());
+  }, [medications]);
+
+  const allGoals = useMemo(() => {
+    return [...fitnessGoals, ...wellnessGoals].filter(goal => !goal.completed);
+  }, [fitnessGoals, wellnessGoals]);
+
+  const latestMetrics = useMemo(() => {
+    const metricTypes = ['weight', 'blood_pressure', 'heart_rate'];
+    return metricTypes.map(type => {
+      const typeMetrics = metrics.filter(m => m.type === type);
+      return typeMetrics.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0];
+    }).filter(Boolean);
+  }, [metrics]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <View>
-            <Text style={styles.greeting}>Good day!</Text>
-            <Text style={styles.userName}>{user?.name || 'User'}</Text>
-          </View>
-          <TouchableOpacity style={styles.profileButton} onPress={() => router.push('/profile')}>
-            <User size={24} color={colors.text} />
-          </TouchableOpacity>
+        <View>
+          <Text style={styles.greeting}>{greeting}</Text>
+          <Text style={styles.userName}>{user?.name || 'User'}</Text>
         </View>
-
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <View style={styles.searchBar}>
-            <Search size={20} color={colors.textSecondary} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search programs..."
-              placeholderTextColor={colors.textSecondary}
-            />
-          </View>
-          <TouchableOpacity style={styles.filterButton}>
-            <Filter size={20} color={colors.text} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Categories */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesContainer}>
-          {categories.map((category, index) => (
-            <TouchableOpacity
-              key={category.id}
-              style={[
-                styles.categoryChip,
-                index === 0 && styles.categoryChipActive
-              ]}
-            >
-              <Text style={[
-                styles.categoryText,
-                index === 0 && styles.categoryTextActive
-              ]}>
-                {category.name}
-              </Text>
-              {index === 1 && <View style={styles.categoryBadge}><Text style={styles.categoryBadgeText}>12</Text></View>}
-              {index === 2 && <View style={styles.categoryBadge}><Text style={styles.categoryBadgeText}>8</Text></View>}
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+        <TouchableOpacity 
+          style={styles.notificationButton}
+          onPress={() => router.push('/notifications')}
+        >
+          <Heart size={24} color={colors.primary} />
+        </TouchableOpacity>
       </View>
 
-      {/* Content */}
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Featured Programs */}
-        {healthPrograms.map((program) => (
-          <TouchableOpacity
-            key={program.id}
-            style={styles.programCard}
-            onPress={() => router.push(`/program-details/${program.id}`)}
-          >
-            <LinearGradient
-              colors={[program.color, `${program.color}CC`]}
-              style={styles.programGradient}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-            >
-              <View style={styles.programContent}>
-                <View style={styles.programInfo}>
-                  <Text style={styles.programTitle}>{program.title}</Text>
-                  <Text style={styles.programInstructor}>By {program.instructor}</Text>
-                  <View style={styles.programMeta}>
-                    <View style={styles.programMetaItem}>
-                      <Activity size={14} color={colors.black} />
-                      <Text style={styles.programMetaText}>{program.sessions} sessions</Text>
-                    </View>
-                    <View style={styles.programMetaItem}>
-                      <Text style={styles.programDuration}>{program.duration}</Text>
-                    </View>
-                  </View>
-                </View>
-                <View style={styles.programImageContainer}>
-                  <View style={styles.programImage}>
-                    <View style={styles.playButton}>
-                      <Activity size={24} color={colors.black} />
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-        ))}
-
-        {/* Quick Actions */}
-        <View style={styles.quickActions}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.quickActionsGrid}>
-            <TouchableOpacity style={styles.quickActionCard} onPress={() => router.push('/health')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: `${colors.health}20` }]}>
-                <Heart size={24} color={colors.health} />
-              </View>
-              <Text style={styles.quickActionText}>Health Check</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionCard} onPress={() => router.push('/fitness')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: `${colors.fitness}20` }]}>
-                <Activity size={24} color={colors.fitness} />
-              </View>
-              <Text style={styles.quickActionText}>Start Workout</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionCard} onPress={() => router.push('/wellness')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: `${colors.wellness}20` }]}>
-                <Brain size={24} color={colors.wellness} />
-              </View>
-              <Text style={styles.quickActionText}>Mood Check</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionCard} onPress={() => router.push('/ai-chat')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: `${colors.primary}20` }]}>
-                <Bell size={24} color={colors.primary} />
-              </View>
-              <Text style={styles.quickActionText}>AI Assistant</Text>
-            </TouchableOpacity>
+      {/* Health Score */}
+      <Card style={styles.healthScoreCard}>
+        <View style={styles.healthScoreHeader}>
+          <View>
+            <Text style={styles.healthScoreTitle}>Health Score</Text>
+            <Text style={styles.healthScoreSubtitle}>All Systems Good</Text>
+          </View>
+          <View style={styles.healthScoreValue}>
+            <Text style={styles.healthScoreNumber}>85</Text>
+            <Text style={styles.healthScoreUnit}>Score</Text>
           </View>
         </View>
+        <View style={styles.healthScoreProgress}>
+          <View style={[styles.progressBar, { width: '85%' }]} />
+        </View>
+      </Card>
 
-        {/* Today's Goals */}
-        {todaysGoals.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Today's Goals</Text>
-            {todaysGoals.map((goal, index) => (
-              <View key={index} style={styles.goalCard}>
-                <View style={styles.goalProgress}>
-                  <View style={[styles.goalProgressBar, { width: `${goal.progress || 0}%` }]} />
-                </View>
-                <Text style={styles.goalTitle}>{goal.name}</Text>
-                <Text style={styles.goalProgress}>{goal.progress || 0}% complete</Text>
-              </View>
+      {/* Quick Actions */}
+      <Card style={styles.quickActionsCard}>
+        <Text style={styles.sectionTitle}>Quick Actions</Text>
+        <View style={styles.quickActions}>
+          <TouchableOpacity 
+            style={styles.quickAction}
+            onPress={() => router.push('/virtual-consultation')}
+          >
+            <Heart size={20} color={colors.primary} />
+            <Text style={styles.quickActionText}>Talk to Doctor</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.quickAction}
+            onPress={() => router.push('/symptom-checker')}
+          >
+            <Brain size={20} color={colors.primary} />
+            <Text style={styles.quickActionText}>Symptom Checker</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.quickAction}
+            onPress={() => router.push('/ai-health-navigator')}
+          >
+            <Zap size={20} color={colors.primary} />
+            <Text style={styles.quickActionText}>AI Navigator</Text>
+          </TouchableOpacity>
+        </View>
+      </Card>
+
+      {/* Today's Activity */}
+      <ActivityWidget />
+
+      {/* Health Metrics */}
+      {latestMetrics.length > 0 && (
+        <Card style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Vital Signs</Text>
+            <TouchableOpacity onPress={() => router.push('/(tabs)/health')}>
+              <Text style={styles.seeAllText}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.metricsGrid}>
+            {latestMetrics.slice(0, 3).map((metric) => (
+              <MetricCard
+                key={metric.id}
+                title={metric.type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                value={metric.value.toString()}
+                unit={metric.unit}
+                trend={{ value: 2.5, isPositive: true }}
+                onPress={() => router.push('/(tabs)/health')}
+              />
             ))}
           </View>
-        )}
-      </ScrollView>
-    </View>
+        </Card>
+      )}
+
+      {/* Today's Workouts */}
+      {todayWorkouts.length > 0 && (
+        <Card style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Today's Workouts</Text>
+            <TouchableOpacity onPress={() => router.push('/workouts')}>
+              <Text style={styles.seeAllText}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          {todayWorkouts.slice(0, 2).map((workout) => (
+            <WorkoutCard
+              key={workout.id}
+              workout={workout}
+              onPress={() => router.push(`/fitness-session/${workout.id}`)}
+              style={styles.workoutCard}
+            />
+          ))}
+        </Card>
+      )}
+
+      {/* Upcoming Appointments */}
+      {upcomingAppointments.length > 0 && (
+        <Card style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Upcoming Appointments</Text>
+            <TouchableOpacity onPress={() => router.push('/appointments')}>
+              <Text style={styles.seeAllText}>View Calendar</Text>
+            </TouchableOpacity>
+          </View>
+          {upcomingAppointments.map((appointment) => (
+            <AppointmentCard
+              key={appointment.id}
+              appointment={appointment}
+              onPress={() => router.push('/appointments')}
+              style={styles.appointmentCard}
+            />
+          ))}
+        </Card>
+      )}
+
+      {/* Active Medications */}
+      {activeMedications.length > 0 && (
+        <Card style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Medications</Text>
+            <TouchableOpacity onPress={() => router.push('/medications')}>
+              <Text style={styles.seeAllText}>Manage</Text>
+            </TouchableOpacity>
+          </View>
+          {activeMedications.slice(0, 2).map((medication) => (
+            <MedicationCard
+              key={medication.id}
+              medication={medication}
+              onPress={() => router.push('/medications')}
+              style={styles.medicationCard}
+            />
+          ))}
+        </Card>
+      )}
+
+      {/* Active Goals */}
+      {allGoals.length > 0 && (
+        <Card style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Active Goals</Text>
+            <TouchableOpacity onPress={() => router.push('/(tabs)/profile')}>
+              <Text style={styles.seeAllText}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          {allGoals.slice(0, 2).map((goal) => (
+            <GoalCard
+              key={goal.id}
+              goal={goal}
+              onPress={() => router.push('/(tabs)/profile')}
+              style={styles.goalCard}
+            />
+          ))}
+        </Card>
+      )}
+
+      {/* Empty State */}
+      {allGoals.length === 0 && (
+        <Card style={styles.emptyGoalsCard}>
+          <Target size={32} color={colors.textSecondary} />
+          <Text style={styles.emptyGoalsTitle}>No Active Goals</Text>
+          <Text style={styles.emptyGoalsText}>Set your first goal to start tracking progress</Text>
+          <TouchableOpacity 
+            style={styles.createGoalButton}
+            onPress={() => router.push('/(tabs)/profile')}
+          >
+            <Plus size={16} color={colors.background} />
+            <Text style={styles.createGoalButtonText}>Create Goal</Text>
+          </TouchableOpacity>
+        </Card>
+      )}
+    </ScrollView>
   );
 }
 
@@ -233,16 +261,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 20,
+  scrollContent: {
+    paddingBottom: 100,
   },
-  headerTop: {
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 24,
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    paddingBottom: 20,
   },
   greeting: {
     fontSize: 16,
@@ -250,11 +278,11 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   userName: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '700',
     color: colors.text,
   },
-  profileButton: {
+  notificationButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
@@ -262,204 +290,142 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    marginBottom: 24,
-  },
-  searchBar: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.cardBackground,
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 12,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: colors.text,
-  },
-  filterButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 16,
-    backgroundColor: colors.cardBackground,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  categoriesContainer: {
-    marginHorizontal: -20,
-    paddingHorizontal: 20,
-  },
-  categoryChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: colors.cardBackground,
-    marginRight: 12,
-    gap: 8,
-  },
-  categoryChipActive: {
-    backgroundColor: colors.primary,
-  },
-  categoryText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.text,
-  },
-  categoryTextActive: {
-    color: colors.black,
-  },
-  categoryBadge: {
-    backgroundColor: colors.textSecondary,
-    borderRadius: 10,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    minWidth: 20,
-    alignItems: 'center',
-  },
-  categoryBadgeText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: colors.background,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  programCard: {
+  healthScoreCard: {
+    marginHorizontal: 20,
     marginBottom: 20,
-    borderRadius: 20,
-    overflow: 'hidden',
   },
-  programGradient: {
-    padding: 20,
-  },
-  programContent: {
+  healthScoreHeader: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  programInfo: {
-    flex: 1,
-  },
-  programTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: colors.black,
-    marginBottom: 4,
-  },
-  programInstructor: {
-    fontSize: 14,
-    color: colors.black,
-    opacity: 0.8,
-    marginBottom: 12,
-  },
-  programMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  programMetaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  programMetaText: {
-    fontSize: 12,
-    color: colors.black,
-    fontWeight: '600',
-  },
-  programDuration: {
-    fontSize: 12,
-    color: colors.black,
-    fontWeight: '600',
-  },
-  programImageContainer: {
-    marginLeft: 16,
-  },
-  programImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  playButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  quickActions: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: colors.text,
     marginBottom: 16,
   },
-  quickActionsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  quickActionCard: {
-    flex: 1,
-    minWidth: '45%',
-    backgroundColor: colors.cardBackground,
-    borderRadius: 16,
-    padding: 16,
-    alignItems: 'center',
-  },
-  quickActionIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  quickActionText: {
-    fontSize: 14,
+  healthScoreTitle: {
+    fontSize: 18,
     fontWeight: '600',
     color: colors.text,
+    marginBottom: 4,
+  },
+  healthScoreSubtitle: {
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  healthScoreValue: {
+    alignItems: 'flex-end',
+  },
+  healthScoreNumber: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: colors.primary,
+  },
+  healthScoreUnit: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    marginTop: -4,
+  },
+  healthScoreProgress: {
+    height: 6,
+    backgroundColor: colors.border,
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: colors.primary,
+    borderRadius: 3,
+  },
+  quickActionsCard: {
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  quickActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  quickAction: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    backgroundColor: colors.primary + '10',
+    borderRadius: 12,
+    marginHorizontal: 4,
+  },
+  quickActionText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: colors.text,
+    marginTop: 8,
     textAlign: 'center',
   },
   section: {
-    marginBottom: 24,
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
-  goalCard: {
-    backgroundColor: colors.cardBackground,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
   },
-  goalProgress: {
-    height: 4,
-    backgroundColor: colors.border,
-    borderRadius: 2,
-    marginBottom: 12,
-    overflow: 'hidden',
-  },
-  goalProgressBar: {
-    height: '100%',
-    backgroundColor: colors.primary,
-    borderRadius: 2,
-  },
-  goalTitle: {
-    fontSize: 16,
+  sectionTitle: {
+    fontSize: 18,
     fontWeight: '600',
     color: colors.text,
-    marginBottom: 4,
+  },
+  seeAllText: {
+    fontSize: 14,
+    color: colors.primary,
+    fontWeight: '500',
+  },
+  metricsGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+  },
+  workoutCard: {
+    marginBottom: 12,
+  },
+  appointmentCard: {
+    marginBottom: 12,
+  },
+  medicationCard: {
+    marginBottom: 12,
+  },
+  goalCard: {
+    marginBottom: 12,
+  },
+  emptyGoalsCard: {
+    marginHorizontal: 20,
+    marginBottom: 20,
+    alignItems: 'center',
+    paddingVertical: 32,
+  },
+  emptyGoalsTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptyGoalsText: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  createGoalButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+  },
+  createGoalButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.background,
+    marginLeft: 8,
   },
 });

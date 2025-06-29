@@ -91,6 +91,7 @@ function RootLayoutNav({ onLayout }: { onLayout: () => Promise<void> }) {
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         <Stack.Screen name="settings" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" options={{ title: "Page Not Found" }} />
       </Stack>
     </>
   );

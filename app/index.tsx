@@ -10,6 +10,9 @@ export default function IndexScreen() {
   const navigationAttempted = useRef(false);
 
   const navigate = useCallback(() => {
+    if (navigationAttempted.current) return;
+    navigationAttempted.current = true;
+
     if (user) {
       if (user.completedOnboarding) {
         router.replace('/(tabs)');
@@ -22,9 +25,6 @@ export default function IndexScreen() {
   }, [user]);
 
   useEffect(() => {
-    if (navigationAttempted.current) return;
-    navigationAttempted.current = true;
-
     const timer = setTimeout(navigate, 2000);
     return () => clearTimeout(timer);
   }, [navigate]);

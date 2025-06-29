@@ -22,6 +22,7 @@ export interface User {
   fitnessProfile?: FitnessProfile;
   goalPersonalization?: GoalPersonalization;
   behavioral?: BehavioralData;
+  completedOnboarding?: boolean;
 }
 
 export interface EmergencyContact {
