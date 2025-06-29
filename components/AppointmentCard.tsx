@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { Calendar, Clock, User, Video, MapPin, Home } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 import { Appointment } from '@/types';
@@ -7,9 +7,10 @@ import { Appointment } from '@/types';
 export interface AppointmentCardProps {
   appointment: Appointment;
   onPress: () => void;
+  style?: ViewStyle;
 }
 
-export function AppointmentCard({ appointment, onPress }: AppointmentCardProps) {
+export function AppointmentCard({ appointment, onPress, style }: AppointmentCardProps) {
   const getTypeIcon = () => {
     switch (appointment.type) {
       case 'virtual':
@@ -33,7 +34,7 @@ export function AppointmentCard({ appointment, onPress }: AppointmentCardProps) 
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
       <View style={styles.header}>
         <View style={styles.typeContainer}>
           {getTypeIcon()}

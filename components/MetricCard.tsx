@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
 import { TrendingUp, TrendingDown } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 import { TrendData } from '@/types';
@@ -11,6 +11,7 @@ export interface MetricCardProps {
   trend?: TrendData;
   color?: string;
   style?: ViewStyle;
+  onPress?: () => void;
 }
 
 export function MetricCard({ 
@@ -19,10 +20,13 @@ export function MetricCard({
   unit, 
   trend, 
   color = colors.primary,
-  style 
+  style,
+  onPress
 }: MetricCardProps) {
+  const Container = onPress ? TouchableOpacity : View;
+  
   return (
-    <View style={[styles.container, style]}>
+    <Container style={[styles.container, style]} onPress={onPress}>
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
         {trend && (
@@ -46,7 +50,7 @@ export function MetricCard({
         <Text style={[styles.value, { color }]}>{value}</Text>
         {unit && <Text style={styles.unit}>{unit}</Text>}
       </View>
-    </View>
+    </Container>
   );
 }
 

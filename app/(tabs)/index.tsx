@@ -13,6 +13,7 @@ import { useHealthStore } from '@/store/health-store';
 import { useFitnessStore } from '@/store/fitness-store';
 import { useWellnessStore } from '@/store/wellness-store';
 import { useUserStore } from '@/store/user-store';
+import { HealthMetric, Workout, Appointment, Medication } from '@/types';
 import { 
   Heart, 
   Activity, 
@@ -27,9 +28,9 @@ import {
 
 export default function HomeScreen() {
   const { user } = useUserStore();
-  const { metrics, appointments, medications } = useHealthStore();
-  const { workouts, goals: fitnessGoals } = useFitnessStore();
-  const { mood, energy, goals: wellnessGoals } = useWellnessStore();
+  const { healthMetrics, appointments, medications } = useHealthStore();
+  const { workouts, fitnessGoals } = useFitnessStore();
+  const { habits, moodEntries, energyScores } = useWellnessStore();
 
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
@@ -40,7 +41,7 @@ export default function HomeScreen() {
 
   const todayWorkouts = useMemo(() => {
     const today = new Date().toDateString();
-    return workouts.filter(workout => 
+    return workouts.filter((workout: Workout) => 
       workout.scheduledFor && new Date(workout.scheduledFor).toDateString() === today
     );
   }, [workouts]);
@@ -48,26 +49,35 @@ export default function HomeScreen() {
   const upcomingAppointments = useMemo(() => {
     const now = new Date();
     return appointments
-      .filter(apt => new Date(apt.date) > now)
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .filter((apt: Appointment) => new Date(apt.date) > now)
+      .sort((a: Appointment, b: Appointment) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .slice(0, 2);
   }, [appointments]);
 
   const activeMedications = useMemo(() => {
-    return medications.filter(med => !med.endDate || new Date(med.endDate) > new Date());
+    return medications.filter((med: Medication) => !med.endDate || new Date(med.endDate) > new Date());
   }, [medications]);
 
   const allGoals = useMemo(() => {
-    return [...fitnessGoals, ...wellnessGoals].filter(goal => !goal.completed);
-  }, [fitnessGoals, wellnessGoals]);
+    return [...fitnessGoals].filter((goal: any) => !goal.completed);
+  }, [fitnessGoals]);
 
   const latestMetrics = useMemo(() => {
     const metricTypes = ['weight', 'blood_pressure', 'heart_rate'];
     return metricTypes.map(type => {
-      const typeMetrics = metrics.filter(m => m.type === type);
-      return typeMetrics.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0];
+      const typeMetrics = healthMetrics.filter((m: HealthMetric) => m.type === type);
+      return typeMetrics.sort((a: HealthMetric, b: HealthMetric) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0];
     }).filter(Boolean);
-  }, [metrics]);
+  }, [healthMetrics]);
+
+  const currentMood = useMemo(() => {
+    const today = new Date().toISOString().split('T')[0];
+    return moodEntries.find((entry: any) => entry.timestamp?.startsWith(today));
+  }, [moodEntries]);
+
+  const currentEnergy = useMemo(() => {
+    return energyScores[0];
+  }, [energyScores]);
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
@@ -131,7 +141,13 @@ export default function HomeScreen() {
       </Card>
 
       {/* Today's Activity */}
-      <ActivityWidget />
+      <ActivityWidget 
+        title="Today's Activity"
+        value={currentMood ? currentMood.mood : 'Not logged'}
+        type="mood"
+        progress={currentEnergy ? currentEnergy.score : 0}
+        icon="activity"
+      />
 
       {/* Health Metrics */}
       {latestMetrics.length > 0 && (
@@ -143,14 +159,13 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
           <View style={styles.metricsGrid}>
-            {latestMetrics.slice(0, 3).map((metric) => (
+            {latestMetrics.slice(0, 3).map((metric: HealthMetric) => (
               <MetricCard
                 key={metric.id}
-                title={metric.type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                title={metric.type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
                 value={metric.value.toString()}
                 unit={metric.unit}
                 trend={{ value: 2.5, isPositive: true }}
-                onPress={() => router.push('/(tabs)/health')}
               />
             ))}
           </View>
@@ -166,13 +181,13 @@ export default function HomeScreen() {
               <Text style={styles.seeAllText}>View All</Text>
             </TouchableOpacity>
           </View>
-          {todayWorkouts.slice(0, 2).map((workout) => (
-            <WorkoutCard
-              key={workout.id}
-              workout={workout}
-              onPress={() => router.push(`/fitness-session/${workout.id}`)}
-              style={styles.workoutCard}
-            />
+          {todayWorkouts.slice(0, 2).map((workout: Workout) => (
+            <View key={workout.id} style={styles.workoutCard}>
+              <WorkoutCard
+                workout={workout}
+                onPress={() => router.push(`/fitness-session/${workout.id}`)}
+              />
+            </View>
           ))}
         </Card>
       )}
@@ -186,13 +201,13 @@ export default function HomeScreen() {
               <Text style={styles.seeAllText}>View Calendar</Text>
             </TouchableOpacity>
           </View>
-          {upcomingAppointments.map((appointment) => (
-            <AppointmentCard
-              key={appointment.id}
-              appointment={appointment}
-              onPress={() => router.push('/appointments')}
-              style={styles.appointmentCard}
-            />
+          {upcomingAppointments.map((appointment: Appointment) => (
+            <View key={appointment.id} style={styles.appointmentCard}>
+              <AppointmentCard
+                appointment={appointment}
+                onPress={() => router.push('/appointments')}
+              />
+            </View>
           ))}
         </Card>
       )}
@@ -206,13 +221,13 @@ export default function HomeScreen() {
               <Text style={styles.seeAllText}>Manage</Text>
             </TouchableOpacity>
           </View>
-          {activeMedications.slice(0, 2).map((medication) => (
-            <MedicationCard
-              key={medication.id}
-              medication={medication}
-              onPress={() => router.push('/medications')}
-              style={styles.medicationCard}
-            />
+          {activeMedications.slice(0, 2).map((medication: Medication) => (
+            <View key={medication.id} style={styles.medicationCard}>
+              <MedicationCard
+                medication={medication}
+                onPress={() => router.push('/medications')}
+              />
+            </View>
           ))}
         </Card>
       )}
@@ -226,13 +241,13 @@ export default function HomeScreen() {
               <Text style={styles.seeAllText}>View All</Text>
             </TouchableOpacity>
           </View>
-          {allGoals.slice(0, 2).map((goal) => (
-            <GoalCard
-              key={goal.id}
-              goal={goal}
-              onPress={() => router.push('/(tabs)/profile')}
-              style={styles.goalCard}
-            />
+          {allGoals.slice(0, 2).map((goal: any) => (
+            <View key={goal.id} style={styles.goalCard}>
+              <GoalCard
+                goal={goal}
+                onPress={() => router.push('/(tabs)/profile')}
+              />
+            </View>
           ))}
         </Card>
       )}

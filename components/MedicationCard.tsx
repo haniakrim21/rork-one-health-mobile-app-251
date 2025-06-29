@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { Pill, Clock, CheckCircle, Circle } from 'lucide-react-native';
 import { colors } from '@/constants/colors';
 import { Medication } from '@/types';
@@ -8,11 +8,12 @@ export interface MedicationCardProps {
   medication: Medication;
   onPress?: () => void;
   onEdit?: () => void;
+  style?: ViewStyle;
 }
 
-export function MedicationCard({ medication, onPress, onEdit }: MedicationCardProps) {
+export function MedicationCard({ medication, onPress, onEdit, style }: MedicationCardProps) {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
       <View style={styles.header}>
         <View style={styles.titleContainer}>
           <Pill size={20} color={colors.primary} />
@@ -51,7 +52,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.cardBackground,
     borderRadius: 16,
     padding: 16,
-    marginBottom: 12,
   },
   header: {
     flexDirection: 'row',

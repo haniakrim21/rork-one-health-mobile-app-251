@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { colors } from '@/constants/colors';
 import { ProgressBar } from './ProgressBar';
 import { PersonalizedGoal } from '@/types';
@@ -12,9 +12,10 @@ interface GoalCardProps {
   onComplete?: () => void;
   onUpdate?: (progress: number) => void;
   showActions?: boolean;
+  style?: ViewStyle;
 }
 
-export function GoalCard({ goal, onPress, onEdit, onComplete, onUpdate, showActions = true }: GoalCardProps) {
+export function GoalCard({ goal, onPress, onEdit, onComplete, onUpdate, showActions = true, style }: GoalCardProps) {
   const getGoalIcon = () => {
     switch (goal.type) {
       case 'weight':
@@ -62,7 +63,8 @@ export function GoalCard({ goal, onPress, onEdit, onComplete, onUpdate, showActi
     <TouchableOpacity 
       style={[
         styles.container,
-        goal.completed && styles.completedContainer
+        goal.completed && styles.completedContainer,
+        style
       ]}
       onPress={onPress}
       activeOpacity={0.7}
@@ -210,7 +212,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.cardBackground,
     borderRadius: 16,
     padding: 16,
-    marginBottom: 12,
     borderWidth: 1,
     borderColor: colors.border,
   },
